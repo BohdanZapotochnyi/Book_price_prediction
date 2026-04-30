@@ -13,6 +13,9 @@ df #display it
 features = ['Title', 'Author', 'Edition', 'Reviews', 'Ratings', 'Synopsis', 'Genre', 'BookCategory']
 X = df[features]
 
+# Цільова змінна (те, що прогнозуємо)
+y = df['Price']
+
 # Перевірка пропущених значень
 missing_values = df.isnull().sum()
 display(missing_values)
