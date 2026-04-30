@@ -69,7 +69,7 @@ plt.show()
 
 # Аналіз залежності ціни від кількості відгуків
 
-# Щоб візуалізувати залежність ціни книги від кількості відгуків, ми використаємо діаграму розсіювання. Це допоможе нам визначити, чи є якась кореляція між цими двома показниками.
+# Щоб візуалізувати залежність ціни книги від кількості відгуків, ми використаємо діаграму розсіювання. Це допоможе нам визначити, чи є якась кореляція між цими двома показниками. ?
 
 plt.figure(figsize=(12, 7))
 sns.scatterplot(x='Reviews', y='Price', data=df, alpha=0.6)
@@ -77,4 +77,16 @@ plt.title('Залежність ціни від кількості відгук�
 plt.xlabel('Кількість відгуків')
 plt.ylabel('Ціна')
 plt.grid(True, linestyle='--', alpha=0.7)
+plt.show()
+
+# або ?
+
+plt.figure(figsize=(12, 7))
+sns.scatterplot(x='Reviews', y='Price', data=df, alpha=0.6)
+plt.title('Залежність ціни від кількості відгуків')
+plt.xlabel('Кількість відгуків')
+plt.ylabel('Ціна')
+plt.grid(True, linestyle='--', alpha=0.7)
+plt.xticks(rotation=45) # Rotate x-axis labels for readability
+plt.tight_layout() # Adjust layout to prevent labels from being cut off
 plt.show()
