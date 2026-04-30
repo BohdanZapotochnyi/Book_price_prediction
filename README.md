@@ -37,3 +37,20 @@ display(df.describe())
 # Найчастіша ціна: 299 (зустрічається 108 разів).
 # Freq (Частота): Показує кількість появ найчастішого значення для кожного стовпця.
 # Ці дані дають гарне уявлення про розподіл і характеристики даних у вашому наборі.
+
+# Перетворення стовпця 'Price' на числовий тип
+df['Price'] = df['Price'].str.replace(',', '.', regex=False).astype(float)
+
+# Розрахунок середньої ціни для кожної категорії книги
+average_price_by_category = df.groupby('BookCategory')['Price'].mean().sort_values(ascending=False).reset_index()
+
+# Візуалізація середньої ціни за категоріями
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+plt.figure(figsize=(12, 7))
+sns.barplot(x='Price', y='BookCategory', data=average_price_by_category, palette='viridis')
+plt.title('Середня ціна книги за категоріями')
+plt.xlabel('Середня ціна')
+plt.ylabel('Категорія книги')
+plt.show()
