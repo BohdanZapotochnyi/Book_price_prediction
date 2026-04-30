@@ -142,6 +142,7 @@ plt.tight_layout() # Adjust layout to prevent labels from being cut off
 plt.show()
 
 # ---------------------------------------------------------------------------
+
 # Створення цінових діапазонів
 # Переконайтеся, що стовпець 'Price' є числовим, перетворюючи нечислові значення на NaN
 df['Price'] = pd.to_numeric(df['Price'], errors='coerce')
@@ -153,6 +154,7 @@ df['Price_Range'] = pd.cut(df['Price'], bins=num_bins, labels=[f'Range {i+1}' fo
 # Вивід перших кількох рядків з новим стовпцем
 display(df[['Price', 'Price_Range']].head())
 
+# -----------------------------------------------------------------------
 # Підрахунок кількості книг у кожному ціновому діапазоні
 price_range_counts = df['Price_Range'].value_counts().sort_index()
 
