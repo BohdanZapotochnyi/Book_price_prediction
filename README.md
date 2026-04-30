@@ -54,3 +54,15 @@ plt.title('Середня ціна книги за категоріями')
 plt.xlabel('Середня ціна')
 plt.ylabel('Категорія книги')
 plt.show()
+
+# Розрахунок топ-10 найпопулярніших авторів за кількістю книг
+top_10_authors = df['Author'].value_counts().head(10).reset_index()
+top_10_authors.columns = ['Author', 'BookCount']
+
+# Візуалізація топ-10 авторів
+plt.figure(figsize=(12, 7))
+sns.barplot(x='BookCount', y='Author', hue='Author', data=top_10_authors, palette='magma', legend=False)
+plt.title('Топ-10 найпопулярніших авторів за кількістю книг')
+plt.xlabel('Кількість книг')
+plt.ylabel('Автор')
+plt.show()
