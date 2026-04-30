@@ -19,6 +19,44 @@ y = df['Price']
 # Розділяємо дані
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
 
+# ???
+# User requested to rotate x-axis for readability. This cell is for data loading and feature definition, not plotting.
+# Please specify which plotting cell you would like to modify for x-axis rotation.
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.preprocessing import LabelEncoder
+import re
+
+df = pd.read_csv('/content/Book price/train.csv', encoding='latin1', sep=';')
+
+# Ensure 'Price' column is numeric
+df['Price'] = df['Price'].astype(str).str.replace(',', '.', regex=False).astype(float)
+
+# Preprocess 'Reviews' column to extract numerical part
+df['Reviews'] = df['Reviews'].astype(str).apply(lambda x: float(re.search(r'\d+\.?\d*', x).group()) if re.search(r'\d+\.?\d*', x) else 0.0)
+
+# Preprocess 'Ratings' column to extract numerical part
+df['Ratings'] = df['Ratings'].astype(str).apply(lambda x: int(re.search(r'\d+', x).group()) if re.search(r'\d+', x) else 0)
+
+# Define features and target
+features = ['Title', 'Author', 'Edition', 'Reviews', 'Ratings', 'Synopsis', 'Genre', 'BookCategory']
+X = df[features]
+y = df['Price']
+
+# Apply Label Encoding to remaining categorical features in X
+for column in ['Title', 'Author', 'Edition', 'Synopsis', 'Genre', 'BookCategory']:
+    if column in X.columns:
+        le = LabelEncoder()
+        X[column] = le.fit_transform(X[column])
+
+# Split data
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42) # Added random_state for reproducibility
+
+# Train the model
+model = RandomForestRegressor(n_estimators=100, random_state=42)
+model.fit(X_train, y_train)
+# ???
 # Перевірка пропущених значень
 missing_values = df.isnull().sum()
 display(missing_values)
