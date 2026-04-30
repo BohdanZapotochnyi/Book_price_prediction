@@ -90,3 +90,27 @@ plt.grid(True, linestyle='--', alpha=0.7)
 plt.xticks(rotation=45) # Rotate x-axis labels for readability
 plt.tight_layout() # Adjust layout to prevent labels from being cut off
 plt.show()
+
+# Створення цінових діапазонів
+# Переконайтеся, що стовпець 'Price' є числовим, перетворюючи нечислові значення на NaN
+df['Price'] = pd.to_numeric(df['Price'], errors='coerce')
+
+# Ви можете налаштувати `bins` (кількість діапазонів) та `labels` (мітки для діапазонів)
+num_bins = 5 # Кількість діапазонів
+df['Price_Range'] = pd.cut(df['Price'], bins=num_bins, labels=[f'Range {i+1}' for i in range(num_bins)])
+
+# Вивід перших кількох рядків з новим стовпцем
+display(df[['Price', 'Price_Range']].head())
+
+# Підрахунок кількості книг у кожному ціновому діапазоні
+price_range_counts = df['Price_Range'].value_counts().sort_index()
+
+# Візуалізація розподілу книг за ціновими діапазонами
+plt.figure(figsize=(10, 6))
+sns.barplot(x=price_range_counts.index, y=price_range_counts.values, hue=price_range_counts.index, palette='coolwarm', legend=False)
+plt.title('Розподіл книг за ціновими діапазонами')
+plt.xlabel('Ціновий діапазон')
+plt.ylabel('Кількість книг')
+plt.xticks(rotation=45)
+plt.tight_layout()
+plt.show()
