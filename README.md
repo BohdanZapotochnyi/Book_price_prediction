@@ -155,6 +155,7 @@ df['Price_Range'] = pd.cut(df['Price'], bins=num_bins, labels=[f'Range {i+1}' fo
 display(df[['Price', 'Price_Range']].head())
 
 # -----------------------------------------------------------------------
+
 # Підрахунок кількості книг у кожному ціновому діапазоні
 price_range_counts = df['Price_Range'].value_counts().sort_index()
 
