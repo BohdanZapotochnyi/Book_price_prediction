@@ -141,6 +141,7 @@ plt.xticks(rotation=45) # Rotate x-axis labels for readability
 plt.tight_layout() # Adjust layout to prevent labels from being cut off
 plt.show()
 
+# ---------------------------------------------------------------------------
 # Створення цінових діапазонів
 # Переконайтеся, що стовпець 'Price' є числовим, перетворюючи нечислові значення на NaN
 df['Price'] = pd.to_numeric(df['Price'], errors='coerce')
