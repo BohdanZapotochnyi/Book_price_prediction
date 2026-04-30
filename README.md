@@ -8,3 +8,10 @@ df = pd.read_csv('train.csv')
 #df = pd.read_csv('/content/Book price/train.csv', encoding='latin1', sep=';')
 
 df #display it
+
+# Вибираємо всі ознаки, які впливають на ціну
+features = ['Title', 'Author', 'Edition', 'Reviews', 'Ratings', 'Synopsis', 'Genre', 'BookCategory']
+
+# Перевірка пропущених значень
+missing_values = df.isnull().sum()
+display(missing_values)
