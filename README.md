@@ -16,6 +16,9 @@ X = df[features]
 # Цільова змінна (те, що прогнозуємо)
 y = df['Price']
 
+# Розділяємо дані
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+
 # Перевірка пропущених значень
 missing_values = df.isnull().sum()
 display(missing_values)
