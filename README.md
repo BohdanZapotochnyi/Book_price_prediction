@@ -73,6 +73,7 @@ y_pred = model.predict(X_test)
 mae = mean_absolute_error(y_test, y_pred)
 r2 = r2_score(y_test, y_pred)
 
+print("\nОцінка точності моделі:")
 print(f"Mean Absolute Error (MAE): {mae:.2f}")
 print(f"R-squared (R2) score: {r2:.2f}")
 
