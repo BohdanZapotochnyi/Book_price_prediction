@@ -34,15 +34,15 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
 
 # Очищення стовпця 'Price'
 # Видаляємо нечислові символи (наприклад, коми) та перетворюємо на float
-df['Price'] = df['Price'].astype(str).str.extract('(\d+\.?\d*)', expand=False).str.replace(',', '', regex=False).astype(float)
+df['Price'] = df['Price'].astype(str).str.extract(r'(\d+\.?\d*)', expand=False).str.replace(',', '', regex=False).astype(float)
 
 # Очищення стовпця 'Reviews'
 # Витягуємо числову частину та перетворюємо на float (наприклад, "10 Reviews" -> 10.0)
-df['Reviews'] = df['Reviews'].astype(str).str.extract('(\d[\d,.]*)', expand=False).str.replace(',', '', regex=False).astype(float)
+df['Reviews'] = df['Reviews'].astype(str).str.extract(r'(\d[\d,.]*)', expand=False).str.replace(',', '', regex=False).astype(float)
 
 # Очищення стовпця 'Ratings'
 # Витягуємо числову частину та перетворюємо на float (наприклад, "4.5 out of 5 stars" або "1,234 Ratings" -> 4.5 або 1234.0)
-df['Ratings'] = df['Ratings'].astype(str).str.extract('(\d[\d,.]*)', expand=False).str.replace(',', '', regex=False).astype(float)
+df['Ratings'] = df['Ratings'].astype(str).str.extract(r'(\d[\d,.]*)', expand=False).str.replace(',', '', regex=False).astype(float)
 
 # Видаляємо рядки з NaN значеннями, які могли з'явитися під час очищення
 df.dropna(subset=['Price', 'Reviews', 'Ratings'], inplace=True)
