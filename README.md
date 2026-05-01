@@ -250,6 +250,92 @@ plt.ylabel('Predicted Prices (Polynomial Model)')
 plt.title('Actual vs. Predicted Prices (Polynomial Regression Model)')
 plt.grid(True)
 plt.show()
+
+# ---------------------------------------
+# Поліноміальна регресія 1 !!!
+# ---------------------------------------
+
+import pandas as pd # Ensure pandas is imported for get_dummies
+from sklearn.preprocessing import PolynomialFeatures, StandardScaler
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_absolute_error, r2_score
+from sklearn.model_selection import train_test_split
+import matplotlib.pyplot as plt
+import numpy as np # Ensure numpy is imported for hstack
+
+# Create the full feature set for X from the original dataframe 'df'
+# This DataFrame will be split into training and testing sets
+X_full_features = df[numerical_features + categorical_features_to_add]
+
+# Розділення даних на тренувальний та тестовий набори (як і раніше)
+# Now X_train_df and X_test_df will contain both numerical and categorical features
+X_train_df, X_test_df, y_train, y_test = train_test_split(X_full_features, y, test_size=0.2, random_state=42)
+
+# Feature Scaling: Масштабування числових ознак (only for numerical parts of X_train_df/X_test_df)
+scaler = StandardScaler()
+X_train_scaled = scaler.fit_transform(X_train_df[numerical_features])
+X_test_scaled = scaler.transform(X_test_df[numerical_features])
+
+# Створення поліноміальних ознак (ступінь 2)
+# Це додасть ознаки, такі як Reviews^2, Ratings^2 та Reviews * Ratings
+poly = PolynomialFeatures(degree=2, include_bias=False)
+X_train_poly = poly.fit_transform(X_train_scaled) # Apply poly features to scaled numerical data
+X_test_poly = poly.transform(X_test_scaled) # Apply poly features to scaled numerical data
+
+# One-hot encode categorical features for training data
+X_train_categorical = pd.get_dummies(X_train_df[categorical_features_to_add], drop_first=True, dtype=float)
+# One-hot encode categorical features for test data
+X_test_categorical = pd.get_dummies(X_test_df[categorical_features_to_add], drop_first=True, dtype=float)
+
+# Align columns - this is crucial if some categories are present in train but not test, or vice-versa
+# Use X_train_categorical columns to reindex X_test_categorical
+X_test_categorical = X_test_categorical.reindex(columns=X_train_categorical.columns, fill_value=0.0)
+
+# Combine polynomial features with one-hot encoded categorical features
+X_train_combined = np.hstack((X_train_poly, X_train_categorical.values))
+X_test_combined = np.hstack((X_test_poly, X_test_categorical.values))
+
+# Ініціалізація моделі лінійної регресії для поліноміальних ознак
+poly_model = LinearRegression()
+
+# Навчання моделі з комбінованими ознаками
+poly_model.fit(X_train_combined, y_train)
+
+# Прогнозування на тестовому наборі
+y_pred_poly = poly_model.predict(X_test_combined)
+
+# Оцінка моделі
+mae_poly = mean_absolute_error(y_test, y_pred_poly)
+r2_poly = r2_score(y_test, y_pred_poly)
+
+print(f"Mean Absolute Error (MAE) для поліноміальної регресії з категоріальними ознаками: {mae_poly:.2f}")
+print(f"R-squared (R2) score для поліноміальної регресії з категоріальними ознаками: {r2_poly:.2f}")
+
+# Виведення коефіцієнтів моделі
+print("\nКоефіцієнти поліноміальної регресії з категоріальними ознаками:")
+# Отримуємо назви нових поліноміальних ознак
+poly_feature_names = poly.get_feature_names_out(numerical_features)
+# Отримуємо назви one-hot закодованих категоріальних ознак
+categorical_feature_names = X_train_categorical.columns.tolist()
+# Комбінуємо всі назви ознак
+all_feature_names = list(poly_feature_names) + categorical_feature_names
+
+for feature, coef in zip(all_feature_names, poly_model.coef_):
+    print(f"{feature}: {coef:.2f}")
+print(f"Перетин (intercept): {poly_model.intercept_:.2f}")
+
+# ---------------------------------------
+
+# Графік порівняння реальних цін із прогнозованими моделлю поліноміальної регресії
+plt.figure(figsize=(10, 10))
+plt.scatter(y_test, y_pred_poly, alpha=0.7, color='purple') # Змінено колір для розрізнення
+plt.plot([min(y_test), max(y_test)], [min(y_test), max(y_test)], '--r', linewidth=2) # Ideal prediction line
+plt.xlabel('Actual Prices')
+plt.ylabel('Predicted Prices (Polynomial + Categorical Model)')
+plt.title('Actual vs. Predicted Prices (Polynomial Regression with Categorical Features)')
+plt.grid(True)
+plt.show()
+
 # ---------------------------------------
 # Гребнева регресія
 # ---------------------------------------
