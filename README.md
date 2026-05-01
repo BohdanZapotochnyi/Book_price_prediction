@@ -66,9 +66,9 @@ df['Genre_Encoded'] = df['Genre_Encoded'].fillna(global_mean_price)
 # -----------------------------------------
 
 # Вибираємо всі ознаки, які впливають на ціну
-features = ['Title', 'Author', 'Edition', 'Reviews', 'Ratings', 'Synopsis', 'Genre', 'BookCategory']
-X = df[features]
-
+# features = ['Title', 'Author', 'Edition', 'Reviews', 'Ratings', 'Synopsis', 'Genre', 'BookCategory']
+# X = df[features]
+X = df[['Reviews', 'Ratings', 'Author_Encoded', 'Genre_Encoded']]
 # Цільова змінна (те, що прогнозуємо)
 y = df['Price']
 
