@@ -82,7 +82,7 @@ for feature, coef in zip(X.columns, model.coef_):
 print(f"Перетин (intercept): {model.intercept_:.2f}")
 
 # ---------------------------------------
-# Поліноміальна регресія
+# Поліноміальна регресія !!!
 # ---------------------------------------
 from sklearn.preprocessing import PolynomialFeatures
 from sklearn.linear_model import LinearRegression
