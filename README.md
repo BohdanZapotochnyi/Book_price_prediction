@@ -175,7 +175,7 @@ print("\nRidge Model Evaluation:")
 print(f"  Mean Absolute Error (MAE): {mae_ridge:.2f}")
 print(f"  R-squared (R2): {r2_ridge:.2f}")
 
-# --------------------------------------
+# або з більшою точністю
 
 from sklearn.linear_model import Ridge
 
