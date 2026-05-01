@@ -235,7 +235,7 @@ plt.ylabel('Ціна')
 plt.grid(True, linestyle='--', alpha=0.7)
 plt.show()
 
-# або ?
+# або 
 
 plt.figure(figsize=(12, 7))
 sns.scatterplot(x='Reviews', y='Price', data=df, alpha=0.6)
