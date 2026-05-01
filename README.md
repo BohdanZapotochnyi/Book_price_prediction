@@ -224,6 +224,16 @@ model = RandomForestRegressor(n_estimators=100, random_state=42)
 model.fit(X_train, y_train)
 
 #---------------------------------------
+import matplotlib.pyplot as plt
+plt.figure(figsize=(10, 6))
+plt.scatter(y_test, y_pred_poly, alpha=0.7, color='yellow')
+plt.plot([min(y_test), max(y_test)], [min(y_test), max(y_test)], '--r', linewidth=2) # Ideal prediction line
+plt.xlabel('Actual Prices')
+plt.ylabel('Predicted Prices (Polynomial Model)')
+plt.title('Actual vs. Predicted Prices (Polynomial Regression Model)')
+plt.grid(True)
+plt.show()
+#---------------------------------------
 # Завдання: порівняти Лінійну регресію, Поліноміальну регресію, Гребеневу регресію та RandomForestRegressor
 # Можливо додати ще якісь регресії
 # Типи регресій: 
