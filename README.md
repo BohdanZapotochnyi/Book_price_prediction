@@ -29,6 +29,7 @@ import pandas as pd
 df = pd.read_csv('/content/Book price/train.csv', encoding='latin1', sep=';')
 # ------------------------------------------
 # Лінійна регресія
+# ------------------------------------------
 # --- Очищення та попередня обробка даних ---
 
 # Очищення стовпця 'Price'
@@ -50,6 +51,36 @@ df.dropna(subset=['Price', 'Reviews', 'Ratings'], inplace=True)
 # Для простої лінійної регресії починаємо лише з очищених числових ознак.
 X = df[['Reviews', 'Ratings']]
 y = df['Price']
+
+# -----------------------------------------
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_absolute_error, r2_score
+
+# Розділення даних на тренувальний та тестовий набори
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Ініціалізація моделі лінійної регресії
+model = LinearRegression()
+
+# Навчання моделі
+model.fit(X_train, y_train)
+
+# Прогнозування на тестовому наборі
+y_pred = model.predict(X_test)
+
+# Оцінка моделі
+mae = mean_absolute_error(y_test, y_pred)
+r2 = r2_score(y_test, y_pred)
+
+print(f"Mean Absolute Error (MAE): {mae:.2f}")
+print(f"R-squared (R2) score: {r2:.2f}")
+
+# Виведення коефіцієнтів моделі
+print("\nКоефіцієнти лінійної регресії:")
+for feature, coef in zip(X.columns, model.coef_):
+    print(f"{feature}: {coef:.2f}")
+print(f"Перетин (intercept): {model.intercept_:.2f}")
 
 # ---------------------------------------
 # RandomForestRegressor
