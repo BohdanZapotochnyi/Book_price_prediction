@@ -123,7 +123,7 @@ for feature, coef in zip(poly_feature_names, poly_model.coef_):
 print(f"Перетин (intercept): {poly_model.intercept_:.2f}")
 
 # ---------------------------------------
-
+# Гребнева регресія
 # ---------------------------------------
 from sklearn.metrics import mean_absolute_error, r2_score
 
