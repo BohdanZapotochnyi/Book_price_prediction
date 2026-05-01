@@ -163,6 +163,7 @@ model.fit(X_train, y_train)
 #---------------------------------------
 # Завдання: порівняти Лінійну регресію, Поліноміальну регресію та RandomForestRegressor
 # Можливо додати ще якісь регресії
+# Типи регресій: Лінійна регресія (Linear Regression), Поліноміальна регресія (Polynomial Regression), Гребенева регресія (Ridge Regression), Ласо-регресія (Lasso Regression), Еластична мережева регресія (Elastic Net Regression), SVR (Support Vector Regression), Дерева рішень та випадкові ліси (Decision Trees and Random Forests for Regression), Градієнтний бустинг (Gradient Boosting Machines, XGBoost, LightGBM, CatBoost)
 #---------------------------------------
 
 # --------------------------------------
