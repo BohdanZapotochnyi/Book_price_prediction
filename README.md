@@ -2,7 +2,10 @@
 ML project. Authors: Запоточний Богдан, Коцеловська Марія
 
 # -------------------------------------------------------
-
+import pandas as pd
+df = pd.read_csv('/content/Book price/train.csv', encoding='latin1', sep=';')
+df.info()
+# -------------------------------------------------------
 import numpy as np
 import pandas as pd
 
@@ -81,6 +84,47 @@ print("\nКоефіцієнти лінійної регресії:")
 for feature, coef in zip(X.columns, model.coef_):
     print(f"{feature}: {coef:.2f}")
 print(f"Перетин (intercept): {model.intercept_:.2f}")
+
+# ---------------------------------------
+# Поліноміальна регресія
+# ---------------------------------------
+from sklearn.preprocessing import PolynomialFeatures
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_absolute_error, r2_score
+from sklearn.model_selection import train_test_split
+
+# Розділення даних на тренувальний та тестовий набори (як і раніше)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Створення поліноміальних ознак (ступінь 2)
+# Це додасть ознаки, такі як Reviews^2, Ratings^2 та Reviews * Ratings
+poly = PolynomialFeatures(degree=2, include_bias=False)
+X_train_poly = poly.fit_transform(X_train)
+X_test_poly = poly.transform(X_test)
+
+# Ініціалізація моделі лінійної регресії для поліноміальних ознак
+poly_model = LinearRegression()
+
+# Навчання моделі
+poly_model.fit(X_train_poly, y_train)
+
+# Прогнозування на тестовому наборі
+y_pred_poly = poly_model.predict(X_test_poly)
+
+# Оцінка моделі
+mae_poly = mean_absolute_error(y_test, y_pred_poly)
+r2_poly = r2_score(y_test, y_pred_poly)
+
+print(f"Mean Absolute Error (MAE) для поліноміальної регресії: {mae_poly:.2f}")
+print(f"R-squared (R2) score для поліноміальної регресії: {r2_poly:.2f}")
+
+# Виведення коефіцієнтів моделі
+print("\nКоефіцієнти поліноміальної регресії:")
+# Отримуємо назви нових поліноміальних ознак
+poly_feature_names = poly.get_feature_names_out(X.columns)
+for feature, coef in zip(poly_feature_names, poly_model.coef_):
+    print(f"{feature}: {coef:.2f}")
+print(f"Перетин (intercept): {poly_model.intercept_:.2f}")
 
 # ---------------------------------------
 # RandomForestRegressor !!!
