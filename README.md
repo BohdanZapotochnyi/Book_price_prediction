@@ -82,6 +82,7 @@ for feature, coef in zip(X.columns, model.coef_):
 print(f"Перетин (intercept): {model.intercept_:.2f}")
 
 # ---------------------------------------
+# Графік порівняння реальних цін із прогнозованими моделлю лінійної регресії
 
 plt.figure(figsize=(10, 6))
 plt.scatter(y_test, y_pred_poly, alpha=0.7, color='green')
@@ -133,6 +134,8 @@ poly_feature_names = poly.get_feature_names_out(numerical_features)
 for feature, coef in zip(poly_feature_names, poly_model.coef_):
     print(f"{feature}: {coef:.2f}")
 print(f"Перетин (intercept): {poly_model.intercept_:.2f}")
+
+# ---------------------------------------
 
 # Графік порівняння реальних цін із прогнозованими моделлю поліноміальної регресії
 plt.figure(figsize=(10, 6))
