@@ -6,6 +6,10 @@ import pandas as pd
 df = pd.read_csv('/content/Book price/train.csv', encoding='latin1', sep=';')
 df.info()
 # -------------------------------------------------------
+
+# ------------------------------------------
+# Лінійна регресія !!!
+# ------------------------------------------
 import numpy as np
 import pandas as pd
 
@@ -26,9 +30,6 @@ y = df['Price']
 # Розділяємо дані
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
 
-# ------------------------------------------
-# Лінійна регресія !!!
-# ------------------------------------------
 # --- Очищення та попередня обробка даних ---
 
 # Очищення стовпця 'Price'
@@ -88,8 +89,8 @@ plt.figure(figsize=(10, 6))
 plt.scatter(y_test, y_pred_poly, alpha=0.7, color='green')
 plt.plot([min(y_test), max(y_test)], [min(y_test), max(y_test)], '--r', linewidth=2) # Ideal prediction line
 plt.xlabel('Actual Prices')
-plt.ylabel('Predicted Prices (Polynomial Model)')
-plt.title('Actual vs. Predicted Prices (Polynomial Regression Model)')
+plt.ylabel('Predicted Prices (Linear Model)')
+plt.title('Actual vs. Predicted Prices (Linear Regression Model)')
 plt.grid(True)
 plt.show()
 
