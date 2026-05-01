@@ -176,6 +176,34 @@ print(f"  Mean Absolute Error (MAE): {mae_ridge:.2f}")
 print(f"  R-squared (R2): {r2_ridge:.2f}")
 
 # --------------------------------------
+
+from sklearn.linear_model import Ridge
+
+# Ініціалізація моделі Ridge-регресії (з параметром регуляризації alpha)
+# Alpha можна налаштовувати, почнемо з 1.0
+model_ridge = Ridge(alpha=1.0)
+
+# Навчання моделі Ridge-регресії на розширеному наборі даних
+model_ridge.fit(X_train_all, y_train)
+
+# Прогнозування на тестовому наборі
+y_pred_ridge = model_ridge.predict(X_test_all)
+
+# Оцінка моделі Ridge-регресії
+mae_ridge = mean_absolute_error(y_test, y_pred_ridge)
+r2_ridge = r2_score(y_test, y_pred_ridge)
+
+print(f"\n--- Модель Ridge-регресії з розширеним набором ознак ---")
+print(f"Mean Absolute Error (MAE) для Ridge: {mae_ridge:.2f}")
+print(f"R-squared (R2) score для Ridge: {r2_ridge:.2f} ({r2_ridge*100:.2f}%)")
+
+# Виведення коефіцієнтів нової моделі
+print("\nКоефіцієнти Ridge-регресії для розширеної моделі (перші 10 для прикладу):")
+for feature, coef in zip(X_all_features.columns[:10], model_ridge.coef_[:10]):
+    print(f"{feature}: {coef:.2f}")
+print(f"Перетин (intercept): {model_ridge.intercept_:.2f}")
+
+# --------------------------------------
 import matplotlib.pyplot as plt
 
 plt.figure(figsize=(10, 6))
