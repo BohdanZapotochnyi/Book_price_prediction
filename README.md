@@ -192,7 +192,7 @@ model.fit(X_train, y_train)
 # Типи регресій: 
 # Лінійна регресія (Linear Regression) - є, 
 # Поліноміальна регресія (Polynomial Regression) - є, 
-# Гребенева регресія (Ridge Regression),
+# Гребенева регресія (Ridge Regression) - є,
 # Ласо-регресія (Lasso Regression), 
 # Еластична мережева регресія (Elastic Net Regression), 
 # SVR (Support Vector Regression), 
