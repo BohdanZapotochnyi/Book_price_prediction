@@ -5,20 +5,25 @@ ML project. Authors: Запоточний Богдан, Коцеловська �
 import pandas as pd
 df = pd.read_csv('/content/Book price/train.csv', encoding='latin1', sep=';')
 df.info()
+df #display it
 # -------------------------------------------------------
 
 # ------------------------------------------
+# ------------------------------------------
 # Лінійна регресія !!!
+# ------------------------------------------
 # ------------------------------------------
 import numpy as np
 import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_absolute_error, r2_score
+import matplotlib.pyplot as plt
+# ------------------------------------------
 
 # Load your data
 #df = pd.read_csv('train.csv')
 df = pd.read_csv('/content/Book price/train.csv', encoding='latin1', sep=';')
-df.info()
-
-df #display it
 
 # Вибираємо всі ознаки, які впливають на ціну
 features = ['Title', 'Author', 'Edition', 'Reviews', 'Ratings', 'Synopsis', 'Genre', 'BookCategory']
@@ -53,9 +58,7 @@ X = df[['Reviews', 'Ratings']]
 y = df['Price']
 
 # -----------------------------------------
-from sklearn.model_selection import train_test_split
-from sklearn.linear_model import LinearRegression
-from sklearn.metrics import mean_absolute_error, r2_score
+
 
 # Розділення даних на тренувальний та тестовий набори
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
@@ -85,7 +88,7 @@ print(f"Перетин (intercept): {model.intercept_:.2f}")
 
 # ---------------------------------------
 # Графік порівняння реальних цін із прогнозованими моделлю лінійної регресії
-import matplotlib.pyplot as plt
+
 plt.figure(figsize=(10, 10))
 plt.scatter(y_test, y_pred, alpha=0.7, color='green')
 plt.plot([min(y_test), max(y_test)], [min(y_test), max(y_test)], '--r', linewidth=2) # Ideal prediction line
