@@ -578,3 +578,142 @@ plt.ylabel('Кількість книг')
 plt.xticks(rotation=45)
 plt.tight_layout()
 plt.show()
+
+#======================================================================
+# ЗАПОТОЧНИЙ
+#====================================================================
+# 1. МАГІЧНІ КОМАНДИ ТА ІМПОРТ
+%matplotlib inline
+import pandas as pd
+import numpy as np
+import re
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.preprocessing import LabelEncoder
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_absolute_error, r2_score, mean_absolute_percentage_error
+from IPython.display import display
+
+# Налаштування стилю графіків
+plt.style.use('seaborn-v0_8')
+
+# 2. ЗАВАНТАЖЕННЯ ДАНИХ
+try:
+    train_raw = pd.read_excel('train.xlsx')
+    test_raw = pd.read_excel('test.xlsx')
+    print("✅ Файли успішно завантажено!")
+except Exception as e:
+    print(f"❌ Помилка завантаження: {e}. Перевірте вкладку Files зліва.")
+
+# 3. ФУНКЦІЯ ОБРОБКИ (ADVANCED FEATURE ENGINEERING)
+def preprocess_data(df, is_train=True, encoders=None):
+    df = df.copy()
+
+    # Очищення числових значень
+    df['Reviews'] = df['Reviews'].apply(lambda x: float(re.search(r'(\d+\.\d+|\d+)', str(x)).group(1))
+                                       if pd.notnull(x) and re.search(r'(\d+\.\d+|\d+)', str(x)) else 0.0)
+    df['Ratings'] = df['Ratings'].apply(lambda x: int(re.sub(r'[^\d]', '', str(x)))
+                                       if pd.notnull(x) and re.sub(r'[^\d]', '', str(x)) != '' else 0)
+
+    # Створення нових ознак (Features)
+    # Витягуємо рік
+    df['Year'] = df['Edition'].apply(lambda x: int(re.search(r'(\d{4})', str(x)).group(1))
+                                    if re.search(r'(\d{4})', str(x)) else 2010)
+    # Тип обкладинки
+    df['Is_Hardcover'] = df['Edition'].apply(lambda x: 1 if 'Hardcover' in str(x) else 0)
+    # Довжина назви
+    df['Title_Len'] = df['Title'].apply(lambda x: len(str(x).split()))
+
+    # Кодування категоріальних колонок
+    cat_cols = ['Author', 'Genre', 'BookCategory']
+    if is_train:
+        encoders = {}
+        for col in cat_cols:
+            le = LabelEncoder()
+            df[col] = le.fit_transform(df[col].astype(str))
+            encoders[col] = le
+        return df, encoders
+    else:
+        for col in cat_cols:
+            le = encoders[col]
+            # Обробка невідомих категорій у тесті
+            df[col] = df[col].astype(str).map(lambda s: s if s in le.classes_ else le.classes_[0])
+            df[col] = le.transform(df[col])
+        return df
+
+# 4. ПІДГОТОВКА ТА НАВЧАННЯ
+print("⏳ Обробка даних та запуск моделі...")
+train_df, encoders = preprocess_data(train_raw, is_train=True)
+
+# Вибираємо фінальні ознаки для навчання
+features = ['Reviews', 'Ratings', 'Author', 'Genre', 'BookCategory', 'Year', 'Is_Hardcover', 'Title_Len']
+X = train_df[features]
+y = np.log1p(train_df['Price']) # Логарифмування ціни для стабільності
+
+# Розділяємо на Train/Validation (80/20)
+X_train, X_val, y_train, y_val = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Налаштування моделі Random Forest
+model = RandomForestRegressor(n_estimators=300, max_depth=22, min_samples_leaf=2, random_state=42)
+model.fit(X_train, y_train)
+
+# 5. ОЦІНКА РЕЗУЛЬТАТІВ
+val_preds_log = model.predict(X_val)
+val_preds = np.expm1(val_preds_log) # Повертаємо з логарифма
+y_val_real = np.expm1(y_val)
+
+mae = mean_absolute_error(y_val_real, val_preds)
+r2 = r2_score(y_val_real, val_preds)
+mape = mean_absolute_percentage_error(y_val_real, val_preds)
+accuracy = max(0, (1 - mape) * 100)
+
+# 6. ВИВІД ТАБЛИЦЬ (КРАСИВИЙ ФОРМАТ)
+print("\n" + "="*40)
+print(f"📊 СТАТИСТИКА ТОЧНОСТІ:")
+print(f"Середня помилка (MAE): {mae:.2f} одиниць")
+print(f"ТОЧНІСТЬ ПРОГРАМИ: {accuracy:.2f}%")
+print(f"Коефіцієнт R²: {r2:.4f}")
+print("="*40)
+
+print("\n📋 ТАБЛИЦЯ ПОРІВНЯННЯ (План vs Факт):")
+comparison_df = pd.DataFrame({
+    'Реальна ціна': y_val_real,
+    'Прогноз': val_preds.round(2),
+    'Похибка': np.abs(y_val_real - val_preds).round(2)
+}).head(10)
+display(comparison_df)
+
+print("\n📈 ВАЖЛИВІСТЬ ОЗНАК:")
+importance_df = pd.DataFrame({
+    'Параметр': features,
+    'Вплив (%)': (model.feature_importances_ * 100).round(2)
+}).sort_values(by='Вплив (%)', ascending=False)
+display(importance_df)
+
+# 7. ГЕНЕРАЦІЯ ГРАФІКІВ (БЕЗ ПОПЕРЕДЖЕНЬ)
+print("\n🎨 Візуалізація результатів...")
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(18, 7))
+
+# Матриця розсіювання
+ax1.scatter(y_val_real, val_preds, alpha=0.4, color='#3498db', edgecolor='white', s=50)
+ax1.plot([y_val_real.min(), y_val_real.max()], [y_val_real.min(), y_val_real.max()], 'r--', lw=3)
+ax1.set_title('Реальна ціна vs Прогнозована', fontsize=15)
+ax1.set_xlabel('Справжня ціна книги', fontsize=12)
+ax1.set_ylabel('Прогноз моделі', fontsize=12)
+ax1.grid(True, linestyle='--', alpha=0.6)
+
+# Barplot важливості
+sns.barplot(x='Вплив (%)', y='Параметр', data=importance_df, ax=ax2,
+            palette='magma', hue='Параметр', legend=False)
+ax2.set_title('Які фактори керують ціною?', fontsize=15)
+ax2.set_xlabel('Рівень впливу у %', fontsize=12)
+
+plt.tight_layout()
+plt.show()
+
+# 8. ЗБЕРЕЖЕННЯ ФІНАЛЬНОГО ПРОГНОЗУ ДЛЯ ТЕСТУ
+test_df = preprocess_data(test_raw, is_train=False, encoders=encoders)
+final_preds = np.expm1(model.predict(test_df[features]))
+pd.DataFrame({'Price': final_preds}).to_excel('final_predictions_model.xlsx', index=False)
+print("\n✅ Файл 'final_predictions_model.xlsx' готовий до завантаження!")
