@@ -193,7 +193,8 @@ plt.show()
 # ---------------------------------------
 # Поліноміальна регресія !!!
 # ---------------------------------------
-from sklearn.preprocessing import PolynomialFeatures
+# from sklearn.preprocessing import PolynomialFeatures
+from sklearn.preprocessing import PolynomialFeatures, StandardScaler
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_absolute_error, r2_score
 from sklearn.model_selection import train_test_split
@@ -202,11 +203,16 @@ import matplotlib.pyplot as plt
 # Розділення даних на тренувальний та тестовий набори (як і раніше)
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
+# Feature Scaling: Масштабування числових ознак
+scaler = StandardScaler()
+X_train_scaled = scaler.fit_transform(X_train[numerical_features])
+X_test_scaled = scaler.transform(X_test[numerical_features])
+
 # Створення поліноміальних ознак (ступінь 2)
 # Це додасть ознаки, такі як Reviews^2, Ratings^2 та Reviews * Ratings
 poly = PolynomialFeatures(degree=2, include_bias=False)
-X_train_poly = poly.fit_transform(X_train[numerical_features]) # Only numerical features for poly
-X_test_poly = poly.transform(X_test[numerical_features]) # Only numerical features for poly
+X_train_poly = poly.fit_transform(X_train_scaled) # Apply poly features to scaled data
+X_test_poly = poly.transform(X_test_scaled) # Apply poly features to scaled data
 
 # Ініціалізація моделі лінійної регресії для поліноміальних ознак
 poly_model = LinearRegression()
