@@ -28,7 +28,7 @@ import pandas as pd
 
 df = pd.read_csv('/content/Book price/train.csv', encoding='latin1', sep=';')
 # ------------------------------------------
-# Лінійна регресія
+# Лінійна регресія !!!
 # ------------------------------------------
 # --- Очищення та попередня обробка даних ---
 
@@ -83,7 +83,7 @@ for feature, coef in zip(X.columns, model.coef_):
 print(f"Перетин (intercept): {model.intercept_:.2f}")
 
 # ---------------------------------------
-# RandomForestRegressor
+# RandomForestRegressor !!!
 # ---------------------------------------
 import pandas as pd
 from sklearn.model_selection import train_test_split
@@ -121,7 +121,7 @@ model = RandomForestRegressor(n_estimators=100, random_state=42)
 model.fit(X_train, y_train)
 
 # --------------------------------------
-# Додаток для опису диних
+# Додаток для опису даних !!!
 # --------------------------------------
 # Перевірка пропущених значень
 missing_values = df.isnull().sum()
