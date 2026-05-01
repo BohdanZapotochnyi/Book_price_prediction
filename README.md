@@ -123,6 +123,32 @@ for feature, coef in zip(poly_feature_names, poly_model.coef_):
 print(f"Перетин (intercept): {poly_model.intercept_:.2f}")
 
 # ---------------------------------------
+
+# ---------------------------------------
+from sklearn.metrics import mean_absolute_error, r2_score
+
+# Predict on the test data using the Elastic Net model
+y_pred_elastic = elastic_net_model.predict(X_test)
+
+# Evaluate Elastic Net model
+mae_elastic = mean_absolute_error(y_test, y_pred_elastic)
+r2_elastic = r2_score(y_test, y_pred_elastic)
+
+print("Elastic Net Model Evaluation:")
+print(f"  Mean Absolute Error (MAE): {mae_elastic:.2f}")
+print(f"  R-squared (R2): {r2_elastic:.2f}")
+
+# Predict on the test data using the Ridge model
+y_pred_ridge = ridge_model.predict(X_test)
+
+# Evaluate Ridge model
+mae_ridge = mean_absolute_error(y_test, y_pred_ridge)
+r2_ridge = r2_score(y_test, y_pred_ridge)
+
+print("\nRidge Model Evaluation:")
+print(f"  Mean Absolute Error (MAE): {mae_ridge:.2f}")
+print(f"  R-squared (R2): {r2_ridge:.2f}")
+# ---------------------------------------
 # RandomForestRegressor !!!
 # ---------------------------------------
 import pandas as pd
