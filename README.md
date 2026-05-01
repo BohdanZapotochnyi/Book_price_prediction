@@ -83,7 +83,7 @@ print(f"Перетин (intercept): {model.intercept_:.2f}")
 
 # ---------------------------------------
 # Графік порівняння реальних цін із прогнозованими моделлю лінійної регресії
-
+import matplotlib.pyplot as plt
 plt.figure(figsize=(10, 6))
 plt.scatter(y_test, y_pred_poly, alpha=0.7, color='green')
 plt.plot([min(y_test), max(y_test)], [min(y_test), max(y_test)], '--r', linewidth=2) # Ideal prediction line
@@ -138,6 +138,7 @@ print(f"Перетин (intercept): {poly_model.intercept_:.2f}")
 # ---------------------------------------
 
 # Графік порівняння реальних цін із прогнозованими моделлю поліноміальної регресії
+import matplotlib.pyplot as plt
 plt.figure(figsize=(10, 6))
 plt.scatter(y_test, y_pred_poly, alpha=0.7, color='green')
 plt.plot([min(y_test), max(y_test)], [min(y_test), max(y_test)], '--r', linewidth=2) # Ideal prediction line
