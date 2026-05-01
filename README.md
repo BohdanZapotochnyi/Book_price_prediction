@@ -25,16 +25,6 @@ import matplotlib.pyplot as plt
 #df = pd.read_csv('train.csv')
 df = pd.read_csv('/content/Book price/train.csv', encoding='latin1', sep=';')
 
-# Вибираємо всі ознаки, які впливають на ціну
-features = ['Title', 'Author', 'Edition', 'Reviews', 'Ratings', 'Synopsis', 'Genre', 'BookCategory']
-X = df[features]
-
-# Цільова змінна (те, що прогнозуємо)
-y = df['Price']
-
-# Розділяємо дані
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
-
 # --- Очищення та попередня обробка даних ---
 
 # Очищення стовпця 'Price'
@@ -51,6 +41,16 @@ df['Ratings'] = df['Ratings'].astype(str).str.extract(r'(\d[\d,.]*)', expand=Fal
 
 # Видаляємо рядки з NaN значеннями, які могли з'явитися під час очищення
 df.dropna(subset=['Price', 'Reviews', 'Ratings'], inplace=True)
+
+# Вибираємо всі ознаки, які впливають на ціну
+features = ['Title', 'Author', 'Edition', 'Reviews', 'Ratings', 'Synopsis', 'Genre', 'BookCategory']
+X = df[features]
+
+# Цільова змінна (те, що прогнозуємо)
+y = df['Price']
+
+# Розділяємо дані
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
 
 # Вибираємо числові ознаки (X) та цільову змінну (y) для лінійної регресії
 # Для простої лінійної регресії починаємо лише з очищених числових ознак.
