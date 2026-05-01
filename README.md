@@ -1,6 +1,6 @@
 # Book_price_prediction
 ML project. Authors: Запоточний Богдан, Коцеловська Марія
-
+# -------------------------------------------------------
 # -------------------------------------------------------
 import pandas as pd
 df = pd.read_csv('/content/Book price/train.csv', encoding='latin1', sep=';')
