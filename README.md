@@ -13,6 +13,7 @@ df #display it
 # Лінійна регресія !!!
 # ------------------------------------------
 # ------------------------------------------
+
 import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
@@ -44,6 +45,26 @@ df['Ratings'] = df['Ratings'].astype(str).str.extract(r'(\d[\d,.]*)', expand=Fal
 # Видаляємо рядки з NaN значеннями, які могли з'явитися під час очищення
 df.dropna(subset=['Price', 'Reviews', 'Ratings'], inplace=True)
 
+# -----------------------------------------
+
+# --- Target Encoding для категоріальних ознак ---
+
+# Приклад без регуляризації (для демонстрації концепції, але не рекомендується для використання "як є"):
+# Обчислюємо середню ціну для кожного автора
+mean_prices_by_author = df.groupby('Author')['Price'].mean()
+df['Author_Encoded'] = df['Author'].map(mean_prices_by_author)
+
+# Для нових авторів (не в навчальному наборі) можна використовувати глобальне середнє
+global_mean_price = df['Price'].mean()
+df['Author_Encoded'] = df['Author_Encoded'].fillna(global_mean_price)
+
+# Аналогічно для 'Genre'
+mean_prices_by_genre = df.groupby('Genre')['Price'].mean()
+df['Genre_Encoded'] = df['Genre'].map(mean_prices_by_genre)
+df['Genre_Encoded'] = df['Genre_Encoded'].fillna(global_mean_price)
+
+# -----------------------------------------
+
 # Вибираємо всі ознаки, які впливають на ціну
 features = ['Title', 'Author', 'Edition', 'Reviews', 'Ratings', 'Synopsis', 'Genre', 'BookCategory']
 X = df[features]
@@ -52,21 +73,22 @@ X = df[features]
 y = df['Price']
 
 # Розділяємо дані
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+# X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
 
 # Вибираємо числові ознаки (X) та цільову змінну (y) для лінійної регресії
 # Для простої лінійної регресії починаємо лише з очищених числових ознак.
 X = df[['Reviews', 'Ratings']]
 y = df['Price']
 
-# -----------------------------------------
-
-
 # Розділення даних на тренувальний та тестовий набори
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
 # Ініціалізація моделі лінійної регресії
 model = LinearRegression()
+
+# -----------------------------------------
 
 # Навчання моделі
 model.fit(X_train, y_train)
