@@ -187,7 +187,7 @@ model = RandomForestRegressor(n_estimators=100, random_state=42)
 model.fit(X_train, y_train)
 
 #---------------------------------------
-# Завдання: порівняти Лінійну регресію, Поліноміальну регресію та RandomForestRegressor
+# Завдання: порівняти Лінійну регресію, Поліноміальну регресію, Гребеневу регресію та RandomForestRegressor
 # Можливо додати ще якісь регресії
 # Типи регресій: 
 # Лінійна регресія (Linear Regression) - є, 
