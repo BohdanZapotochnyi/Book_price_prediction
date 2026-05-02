@@ -263,9 +263,9 @@ mape = np.mean(np.abs((y_test - y_pred) / y_test)) * 100
 accuracy_in_percent = 100 - mape
 
 print("\nОцінка точності моделі:")
-print(f"Mean Absolute Error (MAE): {mae:.2f}")
-print(f"Mean Squared Error (MSE): {mse:.2f}")
-print(f"Mean Absolute Percentage Error (MAPE): {mape:.2f}%")
+print(f"Mean Absolute Error (MAE): {mae:.2f}") # Mean Absolute Error — Середня абсолютна помилка
+print(f"Mean Squared Error (MSE): {mse:.2f}") #Mean Squared Error — Середня квадратична помилка
+print(f"Mean Absolute Percentage Error (MAPE): {mape:.2f}%") #Mean Absolute Percentage Error — Середня абсолютна відсоткова помилка
 print(f"R-squared (R2) score: {r2:.2f}")
 print(f"Точність: {accuracy_in_percent:.2f}%") # Те саме число у відсотках
 
