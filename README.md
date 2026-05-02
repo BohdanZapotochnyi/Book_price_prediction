@@ -441,7 +441,7 @@ plt.show()
 import pandas as pd # Ensure pandas is imported for get_dummies
 from sklearn.preprocessing import PolynomialFeatures, StandardScaler
 from sklearn.linear_model import LinearRegression
-from sklearn.metrics import mean_absolute_error, r2_score
+from sklearn.metrics import mean_absolute_error, r2_score, mean_squared_error
 from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
 import numpy as np # Ensure numpy is imported for hstack
