@@ -244,6 +244,7 @@ plt.show()
 # Гребнева регресія Додано точність моделі = 81.66%
 # ---------------------------------------
 # ---------------------------------------
+import numpy as np
 from sklearn.metrics import mean_absolute_error, r2_score, mean_squared_error
 from sklearn.linear_model import ElasticNet, Ridge # Import ElasticNet and Ridge
 import matplotlib.pyplot as plt
@@ -259,6 +260,10 @@ elastic_net_model.fit(X_train_combined, y_train)
 # y_pred_elastic = elastic_net_model.predict(X_test_all)
 y_pred_elastic = elastic_net_model.predict(X_test_combined)
 
+# Predict on the test data using the Ridge model
+# y_pred_ridge = ridge_model.predict(X_test_all)
+y_pred_ridge = ridge_model.predict(X_test_combined)
+
 # Evaluate Elastic Net model
 mae_elastic = mean_absolute_error(y_test, y_pred_elastic)
 r2_elastic = r2_score(y_test, y_pred_elastic)
@@ -266,10 +271,6 @@ r2_elastic = r2_score(y_test, y_pred_elastic)
 print("Elastic Net Model Evaluation:")
 print(f"  Mean Absolute Error (MAE): {mae_elastic:.2f}")
 print(f"  R-squared (R2): {r2_elastic:.2f}")
-
-# Predict on the test data using the Ridge model
-# y_pred_ridge = ridge_model.predict(X_test_all)
-y_pred_ridge = ridge_model.predict(X_test_combined)
 
 # Evaluate Ridge model
 mae_ridge = mean_absolute_error(y_test, y_pred_ridge)
