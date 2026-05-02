@@ -566,7 +566,9 @@ plt.show()
 # ---------------------------------------
 
 # ---------------------------------------
+# ---------------------------------------
 # Гребнева регресія (Додано точність моделі)
+# ---------------------------------------
 # ---------------------------------------
 from sklearn.metrics import mean_absolute_error, r2_score, mean_squared_error
 from sklearn.linear_model import ElasticNet, Ridge # Import ElasticNet and Ridge
@@ -621,7 +623,9 @@ plt.grid(True)
 plt.show()
 
 # ---------------------------------------
+# ---------------------------------------
 # Гребнева регресія 1 !!! (Додано точність моделі)
+# ---------------------------------------
 # ---------------------------------------
 from sklearn.metrics import mean_absolute_error, r2_score, mean_squared_error
 from sklearn.linear_model import Ridge
@@ -676,7 +680,9 @@ plt.grid(True)
 plt.show()
 
 # ---------------------------------------
+# ---------------------------------------
 # RandomForestRegressor !!!
+# ---------------------------------------
 # ---------------------------------------
 import pandas as pd
 from sklearn.model_selection import train_test_split
