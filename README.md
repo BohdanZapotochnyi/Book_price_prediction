@@ -246,6 +246,7 @@ plt.show()
 # ---------------------------------------
 from sklearn.metrics import mean_absolute_error, r2_score, mean_squared_error
 from sklearn.linear_model import ElasticNet, Ridge # Import ElasticNet and Ridge
+import matplotlib.pyplot as plt
 
 # Розділення даних на тренувальний та тестовий набори (як і раніше)
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
@@ -285,8 +286,6 @@ print(f"Mean Absolute Percentage Error (MAPE): {mape_ridge:.2f}%") # Mean Absolu
 print(f"  R-squared (R2): {r2_ridge:.2f}")
 print(f"Точність моделі: {accuracy_ridge:.2f}%")
 
-import matplotlib.pyplot as plt
-
 plt.figure(figsize=(10, 10))
 plt.scatter(y_test, y_pred_ridge, alpha=0.7)
 plt.plot([min(y_test), max(y_test)], [min(y_test), max(y_test)], '--r', linewidth=2) # Ideal prediction line
@@ -303,6 +302,7 @@ plt.show()
 # ---------------------------------------
 from sklearn.metrics import mean_absolute_error, r2_score, mean_squared_error
 from sklearn.linear_model import Ridge
+import matplotlib.pyplot as plt
 
 # Ініціалізація моделі Ridge-регресії (з параметром регуляризації alpha)
 # Alpha можна налаштовувати, почнемо з 1.0
@@ -341,8 +341,6 @@ print("\nКоефіцієнти Ridge-регресії для розширено
 for feature, coef in zip(all_feature_names[:10], model_ridge.coef_[:10]):
     print(f"{feature}: {coef:.2f}")
 print(f"Перетин (intercept): {model_ridge.intercept_:.2f}")
-
-import matplotlib.pyplot as plt
 
 plt.figure(figsize=(10, 10))
 plt.scatter(y_test, y_pred_ridge, alpha=0.7)
