@@ -617,8 +617,10 @@ plt.title('Actual vs. Predicted Prices (Ridge Model)')
 plt.grid(True)
 plt.show()
 
-# або з більшою точністю
-
+# ---------------------------------------
+# Гребнева регресія 1 !!! (Додано точність моделі)
+# ---------------------------------------
+from sklearn.metrics import mean_absolute_error, r2_score, mean_squared_error
 from sklearn.linear_model import Ridge
 
 # Ініціалізація моделі Ridge-регресії (з параметром регуляризації alpha)
@@ -636,10 +638,21 @@ y_pred_ridge = model_ridge.predict(X_test_combined)
 # Оцінка моделі Ridge-регресії
 mae_ridge = mean_absolute_error(y_test, y_pred_ridge)
 r2_ridge = r2_score(y_test, y_pred_ridge)
+mse_ridge = mean_squared_error(y_test, y_pred_ridge)
 
-print(f"\n--- Модель Ridge-регресії з розширеним набором ознак ---")
-print(f"Mean Absolute Error (MAE) для Ridge: {mae_ridge:.2f}")
-print(f"R-squared (R2) score для Ridge: {r2_ridge:.2f} ({r2_ridge*100:.2f}%)")
+mape_ridge = np.mean(np.abs((y_test - y_pred_elastic) / (y_test + 1e-10))) * 100
+accuracy_ridge = 100 - mape_ridge
+
+print("\nRidge Model Evaluation:")
+print(f"Mean Absolute Error (MAE): {mae_ridge:.2f}") # Mean Absolute Error — Середня абсолютна помилка
+print(f"Mean Squared Error (MSE): {mse_ridge:.2f}") # Mean Squared Error — Середня квадратична помилка
+print(f"Mean Absolute Percentage Error (MAPE): {mape_ridge:.2f}%") # Mean Absolute Percentage Error — Середня абсолютна відсоткова помилка
+print(f"  R-squared (R2): {r2_ridge:.2f}")
+print(f"Точність моделі: {accuracy_ridge:.2f}%")
+
+# print(f"\n--- Модель Ridge-регресії з розширеним набором ознак ---")
+# print(f"Mean Absolute Error (MAE) для Ridge: {mae_ridge:.2f}")
+# print(f"R-squared (R2) score для Ridge: {r2_ridge:.2f} ({r2_ridge*100:.2f}%)")
 
 # Виведення коефіцієнтів нової моделі
 print("\nКоефіцієнти Ridge-регресії для розширеної моделі (перші 10 для прикладу):")
