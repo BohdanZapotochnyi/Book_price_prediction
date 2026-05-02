@@ -241,7 +241,7 @@ plt.show()
 
 # ---------------------------------------
 # ---------------------------------------
-# Еластична мережева регресія та Гребнева регресія Додано точність моделі = 81.66%
+# Еластична мережева Додано точність моделі = 81.66% регресія та Гребнева регресія Додано точність моделі = 81.46%
 # ---------------------------------------
 # ---------------------------------------
 import numpy as np
@@ -272,9 +272,16 @@ y_pred_ridge = ridge_model.predict(X_test_combined)
 # Evaluate Elastic Net model
 mae_elastic = mean_absolute_error(y_test, y_pred_elastic)
 r2_elastic = r2_score(y_test, y_pred_elastic)
+mse_elastic = mean_squared_error(y_test, y_pred_elastic)
+
+mape_elastic = np.mean(np.abs((y_test - y_pred_elastic) / (y_test + 1e-10))) * 100
+accuracy_elastic = 100 - mape_elastic
 
 print("Elastic Net Model Evaluation:")
-print(f"  Mean Absolute Error (MAE): {mae_elastic:.2f}")
+print(f"  Mean Absolute Error (MAE): {mae_elastic:.2f}") # Mean Absolute Error — Середня абсолютна помилка
+print(f"Mean Squared Error (MSE): {mse_elastic:.2f}") # Mean Squared Error — Середня квадратична помилка
+print(f"Mean Absolute Percentage Error (MAPE): {mape_elastic:.2f}%") # Середня абсолютна відсоткова помилка
+
 print(f"  R-squared (R2): {r2_elastic:.2f}")
 
 # Evaluate Ridge model
@@ -282,7 +289,7 @@ mae_ridge = mean_absolute_error(y_test, y_pred_ridge)
 r2_ridge = r2_score(y_test, y_pred_ridge)
 mse_ridge = mean_squared_error(y_test, y_pred_ridge)
 
-mape_ridge = np.mean(np.abs((y_test - y_pred_elastic) / (y_test + 1e-10))) * 100
+mape_ridge = np.mean(np.abs((y_test - y_pred_ridge) / (y_test + 1e-10))) * 100
 accuracy_ridge = 100 - mape_ridge
 
 print("\nRidge Model Evaluation:")
@@ -300,21 +307,6 @@ plt.ylabel('Predicted Prices (Ridge Model)')
 plt.title('Actual vs. Predicted Prices (Ridge Model)')
 plt.grid(True)
 plt.show()
-
-# Evaluate Elastic Net model
-mae_elastic = mean_absolute_error(y_test, y_pred_elastic)
-r2_elastic = r2_score(y_test, y_pred_elastic)
-mse_elastic = mean_squared_error(y_test, y_pred_elastic)
-
-mape_elastic = np.mean(np.abs((y_test - y_pred_elastic) / (y_test + 1e-10))) * 100
-accuracy_elastic = 100 - mape_elastic
-
-print("\nElastic Net Model Evaluation:")
-print(f"Mean Absolute Error (MAE): {mae_elastic:.2f}") # Mean Absolute Error — Середня абсолютна помилка
-print(f"Mean Squared Error (MSE): {mse_elastic:.2f}") # Mean Squared Error — Середня квадратична помилка
-print(f"Mean Absolute Percentage Error (MAPE): {mape_elastic:.2f}%") # Середня абсолютна відсоткова помилка
-print(f"  R-squared (R2): {r2_elastic:.2f}")
-print(f"Точність моделі: {accuracy_elastic:.2f}%")
 
 plt.figure(figsize=(10, 10))
 plt.scatter(y_test, y_pred_elastic, alpha=0.7)
