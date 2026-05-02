@@ -566,6 +566,13 @@ plt.show()
 # Гребнева регресія
 # ---------------------------------------
 from sklearn.metrics import mean_absolute_error, r2_score
+from sklearn.linear_model import ElasticNet, Ridge # Import ElasticNet and Ridge
+
+# Assuming X_train_combined, X_test_combined, y_train, y_test are already defined from the previous cell
+
+# Initialize and train Elastic Net model
+elastic_net_model = ElasticNet(random_state=42)
+elastic_net_model.fit(X_train_combined, y_train)
 
 # Predict on the test data using the Elastic Net model
 y_pred_elastic = elastic_net_model.predict(X_test_all)
