@@ -241,12 +241,13 @@ plt.show()
 
 # ---------------------------------------
 # ---------------------------------------
-# Гребнева регресія Додано точність моделі = 81.66%
+# Еластична мережева регресія та Гребнева регресія Додано точність моделі = 81.66%
 # ---------------------------------------
 # ---------------------------------------
 import numpy as np
 from sklearn.metrics import mean_absolute_error, r2_score, mean_squared_error
 from sklearn.linear_model import ElasticNet, Ridge # Import ElasticNet and Ridge
+from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
 
 # Розділення даних на тренувальний та тестовий набори (як і раніше)
@@ -255,6 +256,10 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_
 # Initialize and train Elastic Net model
 elastic_net_model = ElasticNet(random_state=42)
 elastic_net_model.fit(X_train_combined, y_train)
+
+# Initialize and train Ridge model
+ridge_net_model = Ridge(random_state=42)
+ridge_net_model.fit(X_train_combined, y_train)
 
 # Predict on the test data using the Elastic Net model
 # y_pred_elastic = elastic_net_model.predict(X_test_all)
@@ -293,6 +298,30 @@ plt.plot([min(y_test), max(y_test)], [min(y_test), max(y_test)], '--r', linewidt
 plt.xlabel('Actual Prices')
 plt.ylabel('Predicted Prices (Ridge Model)')
 plt.title('Actual vs. Predicted Prices (Ridge Model)')
+plt.grid(True)
+plt.show()
+
+# Evaluate Elastic Net model
+mae_elastic = mean_absolute_error(y_test, y_pred_elastic)
+r2_elastic = r2_score(y_test, y_pred_elastic)
+mse_elastic = mean_squared_error(y_test, y_pred_elastic)
+
+mape_elastic = np.mean(np.abs((y_test - y_pred_elastic) / (y_test + 1e-10))) * 100
+accuracy_elastic = 100 - mape_elastic
+
+print("\nElastic Net Model Evaluation:")
+print(f"Mean Absolute Error (MAE): {mae_elastic:.2f}") # Mean Absolute Error — Середня абсолютна помилка
+print(f"Mean Squared Error (MSE): {mse_elastic:.2f}") # Mean Squared Error — Середня квадратична помилка
+print(f"Mean Absolute Percentage Error (MAPE): {mape_elastic:.2f}%") # Середня абсолютна відсоткова помилка
+print(f"  R-squared (R2): {r2_elastic:.2f}")
+print(f"Точність моделі: {accuracy_elastic:.2f}%")
+
+plt.figure(figsize=(10, 10))
+plt.scatter(y_test, y_pred_elastic, alpha=0.7)
+plt.plot([min(y_test), max(y_test)], [min(y_test), max(y_test)], '--r', linewidth=2) # Ideal prediction line
+plt.xlabel('Actual Prices')
+plt.ylabel('Predicted Prices (Elastic Net Model)')
+plt.title('Actual vs. Predicted Prices (Elastic Net Model)')
 plt.grid(True)
 plt.show()
 
