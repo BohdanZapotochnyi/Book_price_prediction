@@ -191,6 +191,101 @@ plt.title('Actual vs. Predicted Prices (Linear Regression Model)')
 plt.grid(True)
 plt.show()
 
+# ------------------------------------------
+# ------------------------------------------
+# Лінійна регресія 1.5 !!!
+# ------------------------------------------
+# ------------------------------------------
+import numpy as np
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_absolute_error, r2_score
+import matplotlib.pyplot as plt
+
+# Load your data
+df = pd.read_excel('train.xlsx')
+#df = pd.read_csv('/content/Book price/train.csv', encoding='latin1', sep=';')
+# --- Очищення та попередня обробка даних ---
+
+# Очищення стовпця 'Price'
+df['Price'] = df['Price'].astype(str).str.extract(r'(\d+\.?\d*)', expand=False).str.replace(',', '', regex=False).astype(float)
+
+# Очищення стовпця 'Reviews'
+df['Reviews'] = df['Reviews'].astype(str).str.extract(r'(\d[\d,.]*)', expand=False).str.replace(',', '', regex=False).astype(float)
+
+# Очищення стовпця 'Ratings'
+df['Ratings'] = df['Ratings'].astype(str).str.extract(r'(\d[\d,.]*)', expand=False).str.replace(',', '', regex=False).astype(float)
+
+# Видаляємо рядки з NaN значеннями, які могли з'явитися під час очищення
+df.dropna(subset=['Price', 'Reviews', 'Ratings'], inplace=True)
+
+# --- Target Encoding для категоріальних ознак ---
+
+# Приклад без регуляризації (для демонстрації концепції, але не рекомендується для використання "як є"):
+# Обчислюємо середню ціну для кожного автора
+mean_prices_by_author = df.groupby('Author')['Price'].mean()
+df['Author_Encoded'] = df['Author'].map(mean_prices_by_author)
+
+# Для нових авторів (не в навчальному наборі) можна використовувати глобальне середнє
+global_mean_price = df['Price'].mean()
+df['Author_Encoded'] = df['Author_Encoded'].fillna(global_mean_price)
+
+# Аналогічно для 'Genre'
+mean_prices_by_genre = df.groupby('Genre')['Price'].mean()
+df['Genre_Encoded'] = df['Genre'].map(mean_prices_by_genre)
+df['Genre_Encoded'] = df['Genre_Encoded'].fillna(global_mean_price)
+
+# Вибираємо числові ознаки (X) та цільову змінну (y) для лінійної регресії
+# Тепер включаємо закодовані ознаки
+X = df[['Reviews', 'Ratings', 'Author_Encoded', 'Genre_Encoded']]
+y = df['Price']
+
+# Розділення даних на тренувальний та тестовий набори
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Ініціалізація моделі лінійної регресії
+model = LinearRegression()
+
+# Навчання моделі
+model.fit(X_train, y_train)
+
+# Прогнозування на тестовому наборі
+y_pred = model.predict(X_test)
+
+# Оцінка моделі
+mae = mean_absolute_error(y_test, y_pred)
+r2 = r2_score(y_test, y_pred)
+
+# Розрахунок середньої точності у відсотках
+mape = np.mean(np.abs((y_test - y_pred) / y_test)) * 100
+accuracy_in_percent = 100 - mape
+
+print("\nОцінка точності моделі:")
+print(f"Mean Absolute Error (MAE): {mae:.2f}")
+print(f"R-squared (R2) score: {r2:.2f}")
+print(f"Точність: {accuracy_in_percent:.2f}%") # Те саме число у відсотках
+
+# Виведення коефіцієнтів моделі
+print("\nКоефіцієнти лінійної регресії:")
+for feature, coef in zip(X.columns, model.coef_):
+    print(f"{feature}: {coef:.2f}")
+print(f"Перетин (intercept): {model.intercept_:.2f}")
+
+# ---------------------------------------
+# Графік порівняння реальних цін із прогнозованими моделлю лінійної регресії
+plt.figure(figsize=(10, 10))
+plt.scatter(y_test, y_pred, alpha=0.7, color='green')
+plt.plot([min(y_test), max(y_test)], [min(y_test), max(y_test)], '--r', linewidth=2) # Ideal prediction line
+plt.xlabel('Actual Prices')
+plt.ylabel('Predicted Prices (Linear Model)')
+plt.title('Actual vs. Predicted Prices (Linear Regression Model)')
+plt.grid(True)
+plt.show()
+
+
+
+
 # ---------------------------------------
 # Поліноміальна регресія !!!
 # ---------------------------------------
