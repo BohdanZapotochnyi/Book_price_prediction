@@ -275,7 +275,6 @@ for feature, coef in zip(X.columns, model.coef_):
     print(f"{feature}: {coef:.2f}")
 print(f"Перетин (intercept): {model.intercept_:.2f}")
 
-# ---------------------------------------
 # Графік порівняння реальних цін із прогнозованими моделлю лінійної регресії
 plt.figure(figsize=(10, 10))
 plt.scatter(y_test, y_pred, alpha=0.7, color='green')
