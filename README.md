@@ -282,7 +282,7 @@ print(f"  Mean Absolute Error (MAE): {mae_elastic:.2f}") # Mean Absolute Error �
 print(f"Mean Squared Error (MSE): {mse_elastic:.2f}") # Mean Squared Error — Середня квадратична помилка
 print(f"Mean Absolute Percentage Error (MAPE): {mape_elastic:.2f}%") # Середня абсолютна відсоткова помилка
 print(f"  R-squared (R2): {r2_elastic:.2f}")
-print(f"Точність моделі: {accuracy_ridge:.2f}%")
+print(f"Точність моделі: {accuracy_elastic:.2f}%")
 
 
 # Evaluate Ridge model
