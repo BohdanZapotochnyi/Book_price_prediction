@@ -359,6 +359,7 @@ plt.show()
 # ---------------------------------------
 # ---------------------------------------
 import pandas as pd
+from sklearn.metrics import mean_absolute_error, r2_score, mean_squared_error
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.preprocessing import LabelEncoder
@@ -395,6 +396,21 @@ model.fit(X_train, y_train)
 
 # Make predictions with the trained model
 y_pred_rf = model.predict(X_test)
+
+# Оцінка моделі RandomForestRegressor
+mae_rf = mean_absolute_error(y_test, y_pred_rf)
+r2_rf = r2_score(y_test, y_pred_rf)
+mse_rf = mean_squared_error(y_test, y_pred_rf)
+
+mape_rf = np.mean(np.abs((y_test - y_pred_rf) / (y_test + 1e-10))) * 100
+accuracy_rf = 100 - mape_rf
+
+print("\nRandomForestRegressor Model Evaluation:")
+print(f"Mean Absolute Error (MAE): {mae_rf:.2f}") # Mean Absolute Error — Середня абсолютна помилка
+print(f"Mean Squared Error (MSE): {mse_rf:.2f}") # Mean Squared Error — Середня квадратична помилка
+print(f"Mean Absolute Percentage Error (MAPE): {mape_rf:.2f}%") # Mean Absolute Percentage Error — Середня абсолютна відсоткова помилка
+print(f"  R-squared (R2): {r2_rf:.2f}")
+print(f"Точність моделі: {accuracy_rf:.2f}%")
 
 #---------------------------------------
 import matplotlib.pyplot as plt
