@@ -421,6 +421,73 @@ plt.ylabel('Predicted Prices (RandomForestRegressor Model)')
 plt.title('Actual vs. Predicted Prices (RandomForestRegressor Regression Model)')
 plt.grid(True)
 plt.show()
+
+#---------------------------------------
+import pandas as pd
+from sklearn.metrics import mean_absolute_error, r2_score, mean_squared_error
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import GradientBoostingRegressor
+from sklearn.preprocessing import LabelEncoder
+import re
+
+df = pd.read_csv('/content/Book price/train.csv', encoding='latin1', sep=';')
+
+# Ensure 'Price' column is numeric
+df['Price'] = df['Price'].astype(str).str.replace(',', '.', regex=False).astype(float)
+
+# Preprocess 'Reviews' column to extract numerical part
+df['Reviews'] = df['Reviews'].astype(str).apply(lambda x: float(re.search(r'\d+\.?\d*', x).group()) if re.search(r'\d+\.?\d*', x) else 0.0)
+
+# Preprocess 'Ratings' column to extract numerical part
+df['Ratings'] = df['Ratings'].astype(str).apply(lambda x: int(re.search(r'\d+', x).group()) if re.search(r'\d+', x) else 0)
+
+# Define features and target
+features = ['Title', 'Author', 'Edition', 'Reviews', 'Ratings', 'Synopsis', 'Genre', 'BookCategory']
+# X = df[features]
+X = df[features].copy() # Create a copy to avoid SettingWithCopyWarning
+y = df['Price']
+
+# Apply Label Encoding to remaining categorical features in X
+for column in ['Title', 'Author', 'Edition', 'Synopsis', 'Genre', 'BookCategory']:
+    if column in X.columns:
+        le = LabelEncoder()
+        # X[column] = le.fit_transform(X[column])
+        X.loc[:, column] = le.fit_transform(X[column]) # Use .loc to avoid SettingWithCopyWarning
+
+# Split data
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42) # Added random_state for reproducibility
+
+# Train the GradientBoostingRegressor model
+gbr_model = GradientBoostingRegressor(n_estimators=100, learning_rate=0.1, max_depth=3, random_state=42)
+gbr_model.fit(X_train, y_train)
+
+# Make predictions with the trained model
+y_pred_gbr = gbr_model.predict(X_test)
+
+# Evaluate the GradientBoostingRegressor model
+mae_gbr = mean_absolute_error(y_test, y_pred_gbr)
+r2_gbr = r2_score(y_test, y_pred_gbr)
+mse_gbr = mean_squared_error(y_test, y_pred_gbr)
+
+mape_gbr = np.mean(np.abs((y_test - y_pred_gbr) / (y_test + 1e-10))) * 100
+accuracy_gbr = 100 - mape_gbr
+
+print("\nGradientBoostingRegressor Model Evaluation:")
+print(f"Mean Absolute Error (MAE): {mae_gbr:.2f}")
+print(f"Mean Squared Error (MSE): {mse_gbr:.2f}")
+print(f"Mean Absolute Percentage Error (MAPE): {mape_gbr:.2f}%")
+print(f"  R-squared (R2): {r2_gbr:.2f}")
+print(f"Точність моделі: {accuracy_gbr:.2f}%")
+
+plt.figure(figsize=(10, 10))
+plt.scatter(y_test, y_pred_gbr, alpha=0.7, color='green')
+plt.plot([min(y_test), max(y_test)], [min(y_test), max(y_test)], '--r', linewidth=2) # Ideal prediction line
+plt.xlabel('Actual Prices')
+plt.ylabel('Predicted Prices (GradientBoostingRegressor Model)')
+plt.title('Actual vs. Predicted Prices (GradientBoostingRegressor Model)')
+plt.grid(True)
+plt.show()
+
 #---------------------------------------
 # Завдання: порівняти Лінійну регресію, Поліноміальну регресію, Гребеневу регресію та RandomForestRegressor
 # Можливо додати ще якісь регресії
