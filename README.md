@@ -378,14 +378,16 @@ df['Ratings'] = df['Ratings'].astype(str).apply(lambda x: int(re.search(r'\d+', 
 
 # Define features and target
 features = ['Title', 'Author', 'Edition', 'Reviews', 'Ratings', 'Synopsis', 'Genre', 'BookCategory']
-X = df[features]
+# X = df[features]
+X = df[features].copy() # Create a copy to avoid SettingWithCopyWarning
 y = df['Price']
 
 # Apply Label Encoding to remaining categorical features in X
 for column in ['Title', 'Author', 'Edition', 'Synopsis', 'Genre', 'BookCategory']:
     if column in X.columns:
         le = LabelEncoder()
-        X[column] = le.fit_transform(X[column])
+        # X[column] = le.fit_transform(X[column])
+        X.loc[:, column] = le.fit_transform(X[column]) # Use .loc to avoid SettingWithCopyWarning
 
 # Split data
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42) # Added random_state for reproducibility
