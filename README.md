@@ -264,8 +264,8 @@ accuracy_in_percent = 100 - mape
 
 print("\nОцінка точності моделі:")
 print(f"Mean Absolute Error (MAE): {mae:.2f}") # Mean Absolute Error — Середня абсолютна помилка
-print(f"Mean Squared Error (MSE): {mse:.2f}") #Mean Squared Error — Середня квадратична помилка
-print(f"Mean Absolute Percentage Error (MAPE): {mape:.2f}%") #Mean Absolute Percentage Error — Середня абсолютна відсоткова помилка
+print(f"Mean Squared Error (MSE): {mse:.2f}") # Mean Squared Error — Середня квадратична помилка
+print(f"Mean Absolute Percentage Error (MAPE): {mape:.2f}%") # Mean Absolute Percentage Error — Середня абсолютна відсоткова помилка
 print(f"R-squared (R2) score: {r2:.2f}")
 print(f"Точність: {accuracy_in_percent:.2f}%") # Те саме число у відсотках
 
@@ -526,11 +526,14 @@ y_pred_poly = poly_model.predict(X_test_combined)
 # Оцінка моделі
 mae_poly = mean_absolute_error(y_test, y_pred_poly)
 r2_poly = r2_score(y_test, y_pred_poly)
+mse_poly = mean_squared_error(y_test, y_pred_poly)
 
 mape_poly = np.mean(np.abs((y_test - y_pred_poly) / (y_test + 1e-10))) * 100
 accuracy_poly = 100 - mape_poly
 
-print(f"Mean Absolute Error (MAE): {mae_poly:.2f}")
+print(f"Mean Absolute Error (MAE): {mae_poly:.2f}") # Mean Absolute Error — Середня абсолютна помилка
+print(f"Mean Squared Error (MSE): {mse_poly:.2f}") # Mean Squared Error — Середня квадратична помилка
+print(f"Mean Absolute Percentage Error (MAPE): {mape_poly:.2f}%") # Mean Absolute Percentage Error — Середня абсолютна відсоткова помилка
 print(f"R-squared (R2) score: {r2_poly:.2f}")
 print(f"Точність моделі: {accuracy_poly:.2f}%")
 
