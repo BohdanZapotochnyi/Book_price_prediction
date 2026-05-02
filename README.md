@@ -724,7 +724,7 @@ y_pred_rf = model.predict(X_test)
 
 #---------------------------------------
 import matplotlib.pyplot as plt
-plt.figure(figsize=(10, 6))
+plt.figure(figsize=(10, 10))
 plt.scatter(y_test, y_pred_rf, alpha=0.7, color='yellow')
 plt.plot([min(y_test), max(y_test)], [min(y_test), max(y_test)], '--r', linewidth=2) # Ideal prediction line
 plt.xlabel('Actual Prices')
