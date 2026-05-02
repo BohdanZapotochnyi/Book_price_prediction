@@ -423,6 +423,10 @@ plt.grid(True)
 plt.show()
 
 #---------------------------------------
+# ---------------------------------------
+# GradientBoostingRegressor !!! Додано точність моделі = 23.26%
+# ---------------------------------------
+# ---------------------------------------
 import pandas as pd
 from sklearn.metrics import mean_absolute_error, r2_score, mean_squared_error
 from sklearn.model_selection import train_test_split
