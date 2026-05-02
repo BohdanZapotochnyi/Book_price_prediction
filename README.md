@@ -719,10 +719,13 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_
 model = RandomForestRegressor(n_estimators=100, random_state=42)
 model.fit(X_train, y_train)
 
+# Make predictions with the trained model
+y_pred_rf = model.predict(X_test)
+
 #---------------------------------------
 import matplotlib.pyplot as plt
 plt.figure(figsize=(10, 6))
-plt.scatter(y_test, y_pred_poly, alpha=0.7, color='yellow')
+plt.scatter(y_test, y_pred_rf, alpha=0.7, color='yellow')
 plt.plot([min(y_test), max(y_test)], [min(y_test), max(y_test)], '--r', linewidth=2) # Ideal prediction line
 plt.xlabel('Actual Prices')
 plt.ylabel('Predicted Prices (RandomForestRegressor Model)')
