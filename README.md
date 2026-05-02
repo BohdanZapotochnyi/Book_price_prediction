@@ -412,7 +412,6 @@ print(f"Mean Absolute Percentage Error (MAPE): {mape_rf:.2f}%") # Mean Absolute 
 print(f"  R-squared (R2): {r2_rf:.2f}")
 print(f"Точність моделі: {accuracy_rf:.2f}%")
 
-#---------------------------------------
 import matplotlib.pyplot as plt
 plt.figure(figsize=(10, 10))
 plt.scatter(y_test, y_pred_rf, alpha=0.7, color='yellow')
