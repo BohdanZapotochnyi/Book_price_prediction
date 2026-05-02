@@ -565,7 +565,7 @@ plt.show()
 # ---------------------------------------
 # Гребнева регресія
 # ---------------------------------------
-from sklearn.metrics import mean_absolute_error, r2_score
+from sklearn.metrics import mean_absolute_error, r2_score, mean_squared_error
 from sklearn.linear_model import ElasticNet, Ridge # Import ElasticNet and Ridge
 
 # Розділення даних на тренувальний та тестовий набори (як і раніше)
@@ -594,10 +594,25 @@ y_pred_ridge = ridge_model.predict(X_test_combined)
 # Evaluate Ridge model
 mae_ridge = mean_absolute_error(y_test, y_pred_ridge)
 r2_ridge = r2_score(y_test, y_pred_ridge)
+mse_ridge = mean_squared_error(y_test, y_pred_poly)
 
 print("\nRidge Model Evaluation:")
-print(f"  Mean Absolute Error (MAE): {mae_ridge:.2f}")
+print(f"Mean Absolute Error (MAE): {mae_ridge:.2f}") # Mean Absolute Error — Середня абсолютна помилка
+print(f"Mean Squared Error (MSE): {mse_ridge:.2f}") # Mean Squared Error — Середня квадратична помилка
+print(f"Mean Absolute Percentage Error (MAPE): {mape_ridge:.2f}%") # Mean Absolute Percentage Error — Середня абсолютна відсоткова помилка
 print(f"  R-squared (R2): {r2_ridge:.2f}")
+print(f"Точність моделі: {accuracy_poly:.2f}%")
+
+import matplotlib.pyplot as plt
+
+plt.figure(figsize=(10, 10))
+plt.scatter(y_test, y_pred_ridge, alpha=0.7)
+plt.plot([min(y_test), max(y_test)], [min(y_test), max(y_test)], '--r', linewidth=2) # Ideal prediction line
+plt.xlabel('Actual Prices')
+plt.ylabel('Predicted Prices (Ridge Model)')
+plt.title('Actual vs. Predicted Prices (Ridge Model)')
+plt.grid(True)
+plt.show()
 
 # або з більшою точністю
 
