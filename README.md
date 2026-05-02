@@ -285,8 +285,8 @@ plt.title('Actual vs. Predicted Prices (Linear Regression Model)')
 plt.grid(True)
 plt.show()
 
-
-
+# ------------------------------------------
+# ------------------------------------------
 
 # ---------------------------------------
 # Поліноміальна регресія !!!
@@ -435,7 +435,9 @@ plt.grid(True)
 plt.show()
 
 # ---------------------------------------
+# ---------------------------------------
 # Поліноміальна регресія 1.5 !!! в мене працює
+# ---------------------------------------
 # ---------------------------------------
 
 import pandas as pd # Ensure pandas is imported for get_dummies
@@ -550,8 +552,6 @@ for feature, coef in zip(all_feature_names, poly_model.coef_):
     print(f"{feature}: {coef:.2f}")
 print(f"Перетин (intercept): {poly_model.intercept_:.2f}")
 
-# ---------------------------------------
-
 # Графік порівняння реальних цін із прогнозованими моделлю поліноміальної регресії
 plt.figure(figsize=(10, 10))
 plt.scatter(y_test, y_pred_poly, alpha=0.7, color='purple') 
@@ -561,6 +561,9 @@ plt.ylabel('Predicted Prices (Polynomial + Categorical Model)')
 plt.title('Actual vs. Predicted Prices (Polynomial Regression with Categorical Features)')
 plt.grid(True)
 plt.show()
+
+# ---------------------------------------
+# ---------------------------------------
 
 # ---------------------------------------
 # Гребнева регресія (Додано точність моделі)
