@@ -200,7 +200,7 @@ import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
-from sklearn.metrics import mean_absolute_error, r2_score
+from sklearn.metrics import mean_absolute_error, r2_score, mean_squared_error # оцінки точості моделі
 import matplotlib.pyplot as plt
 
 # Load your data
@@ -256,6 +256,7 @@ y_pred = model.predict(X_test)
 # Оцінка моделі
 mae = mean_absolute_error(y_test, y_pred)
 r2 = r2_score(y_test, y_pred)
+mse = mean_squared_error(y_test, y_pred)
 
 # Розрахунок середньої точності у відсотках
 mape = np.mean(np.abs((y_test - y_pred) / y_test)) * 100
@@ -263,6 +264,8 @@ accuracy_in_percent = 100 - mape
 
 print("\nОцінка точності моделі:")
 print(f"Mean Absolute Error (MAE): {mae:.2f}")
+print(f"Mean Squared Error (MSE): {mse:.2f}")
+print(f"Mean Absolute Percentage Error (MAPE): {mape:.2f}%")
 print(f"R-squared (R2) score: {r2:.2f}")
 print(f"Точність: {accuracy_in_percent:.2f}%") # Те саме число у відсотках
 
