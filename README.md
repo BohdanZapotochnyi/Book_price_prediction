@@ -11,7 +11,7 @@ df #display it
 
 # ------------------------------------------
 # ------------------------------------------
-# Лінійна регресія 1.5 !!! 
+# Лінійна регресія 1.5 !!! Точність моделі = 81.63%
 # ------------------------------------------
 # ------------------------------------------
 import numpy as np
@@ -22,8 +22,8 @@ from sklearn.metrics import mean_absolute_error, r2_score, mean_squared_error # 
 import matplotlib.pyplot as plt
 
 # Load your data
-df = pd.read_excel('train.xlsx')
-#df = pd.read_csv('/content/Book price/train.csv', encoding='latin1', sep=';')
+#df = pd.read_excel('train.xlsx')
+df = pd.read_csv('/content/Book price/train.csv', encoding='latin1', sep=';')
 # --- Очищення та попередня обробка даних ---
 
 # Очищення стовпця 'Price'
