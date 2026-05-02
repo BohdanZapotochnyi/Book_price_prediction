@@ -435,7 +435,7 @@ plt.grid(True)
 plt.show()
 
 # ---------------------------------------
-# Поліноміальна регресія 1.5 !!! на перевірку
+# Поліноміальна регресія 1.5 !!! в мене працює
 # ---------------------------------------
 
 import pandas as pd # Ensure pandas is imported for get_dummies
@@ -554,7 +554,7 @@ print(f"Перетин (intercept): {poly_model.intercept_:.2f}")
 
 # Графік порівняння реальних цін із прогнозованими моделлю поліноміальної регресії
 plt.figure(figsize=(10, 10))
-plt.scatter(y_test, y_pred_poly, alpha=0.7, color='purple') # Змінено колір для розрізнення
+plt.scatter(y_test, y_pred_poly, alpha=0.7, color='purple') 
 plt.plot([min(y_test), max(y_test)], [min(y_test), max(y_test)], '--r', linewidth=2) # Ideal prediction line
 plt.xlabel('Actual Prices')
 plt.ylabel('Predicted Prices (Polynomial + Categorical Model)')
