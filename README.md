@@ -563,7 +563,7 @@ plt.grid(True)
 plt.show()
 
 # ---------------------------------------
-# Гребнева регресія
+# Гребнева регресія (Додано точність моделі)
 # ---------------------------------------
 from sklearn.metrics import mean_absolute_error, r2_score, mean_squared_error
 from sklearn.linear_model import ElasticNet, Ridge # Import ElasticNet and Ridge
