@@ -503,7 +503,7 @@ plt.show()
 # Еластична мережева регресія (Elastic Net Regression), 
 # SVR (Support Vector Regression), 
 # Дерева рішень та випадкові ліси (Decision Trees and Random Forests for Regression), RandomForestRegressor - є, 
-# Градієнтний бустинг (Gradient Boosting Machines, XGBoost, LightGBM, CatBoost)
+# Градієнтний бустинг (Gradient Boosting Machines, XGBoost, LightGBM, CatBoost) GradientBoostingRegressor - є
 #---------------------------------------
 
 # --------------------------------------
