@@ -344,7 +344,7 @@ mae_ridge = mean_absolute_error(y_test, y_pred_ridge)
 r2_ridge = r2_score(y_test, y_pred_ridge)
 mse_ridge = mean_squared_error(y_test, y_pred_ridge)
 
-mape_ridge = np.mean(np.abs((y_test - y_pred_elastic) / (y_test + 1e-10))) * 100
+mape_ridge = np.mean(np.abs((y_test - y_pred_ridge) / (y_test + 1e-10))) * 100
 accuracy_ridge = 100 - mape_ridge
 
 print("\nRidge Model Evaluation:")
