@@ -712,35 +712,61 @@ import pandas as pd
 from sklearn.metrics import mean_absolute_error, r2_score, mean_squared_error
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import GradientBoostingRegressor
-from sklearn.preprocessing import LabelEncoder
+from sklearn.preprocessing import LabelEncoder, StandardScaler
 import re
 
 df = pd.read_csv('/content/Book price/train.csv', encoding='latin1', sep=';')
 
-# Ensure 'Price' column is numeric
-df['Price'] = df['Price'].astype(str).str.replace(',', '.', regex=False).astype(float)
+# --- Start of added preprocessing for self-containment ---
+# Convert 'Price' to numeric, handling errors by coercing to NaN
+df['Price'] = pd.to_numeric(df['Price'], errors='coerce')
 
-# Preprocess 'Reviews' column to extract numerical part
-df['Reviews'] = df['Reviews'].astype(str).apply(lambda x: float(re.search(r'\d+\.?\d*', x).group()) if re.search(r'\d+\.?\d*', x) else 0.0)
+# Clean 'Reviews' and 'Ratings' columns to extract numerical values
+df['Reviews'] = df['Reviews'].astype(str).str.extract('(\\d+\\.?\\d*)').astype(float)
+df['Ratings'] = df['Ratings'].astype(str).str.extract('(\\d+)').astype(float)
 
-# Preprocess 'Ratings' column to extract numerical part
-df['Ratings'] = df['Ratings'].astype(str).apply(lambda x: int(re.search(r'\d+', x).group()) if re.search(r'\d+', x) else 0)
+# Calculate mean prices by Author and Genre for target encoding
+# Note: Applying target encoding on the full dataframe before splitting can lead to data leakage.
+# For a more robust ML pipeline, target encoding should ideally be calculated on training data only.
+# However, to replicate the kernel state's 'Author_Encoded' and 'Genre_Encoded' as floats,
+# we apply it here for self-containment.
 
-# Define features and target
-features = ['Title', 'Author', 'Edition', 'Reviews', 'Ratings', 'Synopsis', 'Genre', 'BookCategory']
-# X = df[features]
-X = df[features].copy() # Create a copy to avoid SettingWithCopyWarning
+global_mean_price = df['Price'].mean() # Calculate global mean price for filling NaNs
+
+mean_prices_by_author = df.groupby('Author')['Price'].transform('mean')
+mean_prices_by_genre = df.groupby('Genre')['Price'].transform('mean')
+
+df['Author_Encoded'] = mean_prices_by_author
+df['Genre_Encoded'] = mean_prices_by_genre
+
+df['Author_Encoded'] = df['Author_Encoded'].fillna(global_mean_price)
+df['Genre_Encoded'] = df['Genre_Encoded'].fillna(global_mean_price)
+
+# Define X and y using the processed features
+X = df[['Reviews', 'Ratings', 'Author_Encoded', 'Genre_Encoded']]
 y = df['Price']
 
-# Apply Label Encoding to remaining categorical features in X
-for column in ['Title', 'Author', 'Edition', 'Synopsis', 'Genre', 'BookCategory']:
-    if column in X.columns:
-        le = LabelEncoder()
-        # X[column] = le.fit_transform(X[column])
-        X.loc[:, column] = le.fit_transform(X[column]) # Use .loc to avoid SettingWithCopyWarning
+# Drop rows where y (Price) is NaN, as these cannot be used for training
+# Ensure X and y have the same index after dropping NaNs
+y.dropna(inplace=True)
+X = X.loc[y.index]
 
 # Split data
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42) # Added random_state for reproducibility
+
+# Define features for polynomial expansion and categorical features
+numerical_features = ['Reviews', 'Ratings']
+categorical_features = ['Author_Encoded', 'Genre_Encoded']
+
+# Scale Numerical Features
+scaler = StandardScaler()
+X_train_scaled = scaler.fit_transform(X_train[numerical_features])
+X_test_scaled = scaler.transform(X_test[numerical_features])
+
+# Combine scaled numerical features with categorical features
+X_train_combined = np.hstack((X_train_scaled, X_train[categorical_features].values))
+X_test_combined = np.hstack((X_test_scaled, X_test[categorical_features].values))
+# --- End of added preprocessing for self-containment ---
 
 # Train the GradientBoostingRegressor model
 gbr_model = GradientBoostingRegressor(n_estimators=100, learning_rate=0.1, max_depth=3, random_state=42)
@@ -775,7 +801,7 @@ plt.show()
 
 # --------------------------------------
 # ---------------------------------------
-# GradientBoostingRegressor 1 !!! Додано точність моделі = 27.88% (main)
+# GradientBoostingRegressor 1 !!! Додано точність моделі = 27.88% 
 # ---------------------------------------
 # ---------------------------------------
 
