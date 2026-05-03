@@ -267,7 +267,8 @@ y_pred_elastic = elastic_net_model.predict(X_test_combined)
 
 # Predict on the test data using the Ridge model
 # y_pred_ridge = ridge_model.predict(X_test_all)
-y_pred_ridge = ridge_model.predict(X_test_combined)
+# y_pred_ridge = ridge_model.predict(X_test_combined)
+y_pred_ridge = ridge_net_model.predict(X_test_combined)
 
 # Evaluate Elastic Net model
 mae_elastic = mean_absolute_error(y_test, y_pred_elastic)
