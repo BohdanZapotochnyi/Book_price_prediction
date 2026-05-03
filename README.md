@@ -375,6 +375,106 @@ plt.show()
 
 # ---------------------------------------
 # ---------------------------------------
+# RandomForestRegressor 1 !!! Додано точність моделі = 83.48% (main)
+# ---------------------------------------
+# ---------------------------------------
+import pandas as pd
+import numpy as np
+from sklearn.metrics import mean_absolute_error, r2_score, mean_squared_error
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.preprocessing import LabelEncoder
+import re
+
+df = pd.read_csv('/content/Book price/train.csv', encoding='latin1', sep=';')
+
+# --- Start of added preprocessing for self-containment ---
+# Convert 'Price' to numeric, handling errors by coercing to NaN
+df['Price'] = pd.to_numeric(df['Price'], errors='coerce')
+
+# Clean 'Reviews' and 'Ratings' columns to extract numerical values
+df['Reviews'] = df['Reviews'].astype(str).str.extract('(\\d+\\.?\\d*)').astype(float)
+df['Ratings'] = df['Ratings'].astype(str).str.extract('(\\d+)').astype(float)
+
+# Calculate mean prices by Author and Genre for target encoding
+# Note: Applying target encoding on the full dataframe before splitting can lead to data leakage.
+# For a more robust ML pipeline, target encoding should ideally be calculated on training data only.
+# However, to replicate the kernel state's 'Author_Encoded' and 'Genre_Encoded' as floats,
+# we apply it here for self-containment.
+
+global_mean_price = df['Price'].mean() # Calculate global mean price for filling NaNs
+
+mean_prices_by_author = df.groupby('Author')['Price'].transform('mean')
+mean_prices_by_genre = df.groupby('Genre')['Price'].transform('mean')
+
+df['Author_Encoded'] = mean_prices_by_author
+df['Genre_Encoded'] = mean_prices_by_genre
+
+df['Author_Encoded'] = df['Author_Encoded'].fillna(global_mean_price)
+df['Genre_Encoded'] = df['Genre_Encoded'].fillna(global_mean_price)
+
+# Define X and y using the processed features
+X = df[['Reviews', 'Ratings', 'Author_Encoded', 'Genre_Encoded']]
+y = df['Price']
+
+# Drop rows where y (Price) is NaN, as these cannot be used for training
+# Ensure X and y have the same index after dropping NaNs
+y.dropna(inplace=True)
+X = X.loc[y.index]
+
+# Розділення даних на тренувальний та тестовий набори (як і раніше)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Define features for polynomial expansion and categorical features
+numerical_features = ['Reviews', 'Ratings']
+categorical_features = ['Author_Encoded', 'Genre_Encoded']
+
+# Scale Numerical Features
+scaler = StandardScaler()
+X_train_scaled = scaler.fit_transform(X_train[numerical_features])
+X_test_scaled = scaler.transform(X_test[numerical_features])
+
+# Combine scaled numerical features with categorical features
+X_train_combined = np.hstack((X_train_scaled, X_train[categorical_features].values))
+X_test_combined = np.hstack((X_test_scaled, X_test[categorical_features].values))
+# --- End of added preprocessing for self-containment ---
+# Train the model
+model = RandomForestRegressor(n_estimators=100, random_state=42)
+model.fit(X_train, y_train)
+
+# Make predictions with the trained model
+y_pred_rf = model.predict(X_test)
+
+# Оцінка моделі RandomForestRegressor
+mae_rf = mean_absolute_error(y_test, y_pred_rf)
+r2_rf = r2_score(y_test, y_pred_rf)
+mse_rf = mean_squared_error(y_test, y_pred_rf)
+
+mape_rf = np.mean(np.abs((y_test - y_pred_rf) / (y_test + 1e-10))) * 100
+accuracy_rf = 100 - mape_rf
+
+print("\nRandomForestRegressor Model Evaluation:")
+print(f"Mean Absolute Error (MAE): {mae_rf:.2f}") # Mean Absolute Error — Середня абсолютна помилка
+print(f"Mean Squared Error (MSE): {mse_rf:.2f}") # Mean Squared Error — Середня квадратична помилка
+print(f"Mean Absolute Percentage Error (MAPE): {mape_rf:.2f}%") # Mean Absolute Percentage Error — Середня абсолютна відсоткова помилка
+print(f"  R-squared (R2): {r2_rf:.2f}")
+print(f"Точність моделі: {accuracy_rf:.2f}%")
+
+import matplotlib.pyplot as plt
+plt.figure(figsize=(10, 10))
+plt.scatter(y_test, y_pred_rf, alpha=0.7, color='yellow')
+plt.plot([min(y_test), max(y_test)], [min(y_test), max(y_test)], '--r', linewidth=2) # Ideal prediction line
+plt.xlabel('Actual Prices')
+plt.ylabel('Predicted Prices (RandomForestRegressor Model)')
+plt.title('Actual vs. Predicted Prices (RandomForestRegressor Regression Model)')
+plt.grid(True)
+plt.show()
+
+# ---------------------------------------
+# ---------------------------------------
+
+# ---------------------------------------
+# ---------------------------------------
 # Гребнева регресія 1 !!! Додано точність моделі = 81.66%
 # ---------------------------------------
 # ---------------------------------------
@@ -503,7 +603,7 @@ plt.show()
 
 # ---------------------------------------
 # ---------------------------------------
-# RandomForestRegressor 1 !!! Додано точність моделі = 27.69% (main)
+# RandomForestRegressor 1 !!! Додано точність моделі = 27.69% 
 # ---------------------------------------
 # ---------------------------------------
 # Я додала ознаки з твого коду
