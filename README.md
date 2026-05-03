@@ -446,7 +446,109 @@ plt.title('Actual vs. Predicted Prices (RandomForestRegressor Regression Model)'
 plt.grid(True)
 plt.show()
 
-#---------------------------------------
+# ---------------------------------------
+# ---------------------------------------
+# RandomForestRegressor 1 !!! Додано точність моделі = 27.69%
+# ---------------------------------------
+# ---------------------------------------
+
+import pandas as pd
+import numpy as np
+from sklearn.metrics import mean_absolute_error, r2_score, mean_squared_error
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.preprocessing import LabelEncoder
+import re
+
+df = pd.read_csv('/content/Book price/train.csv', encoding='latin1', sep=';')
+
+# Ensure 'Price' column is numeric
+df['Price'] = df['Price'].astype(str).str.replace(',', '.', regex=False).astype(float)
+
+# 3. ФУНКЦІЯ ОБРОБКИ (ADVANCED FEATURE ENGINEERING)
+def preprocess_data(df, is_train=True, encoders=None):
+    df = df.copy()
+
+    # Очищення числових значень
+    df['Reviews'] = df['Reviews'].apply(lambda x: float(re.search(r'(\d+\.?\d*)', str(x)).group(1)) # Adjusted regex
+                                       if pd.notnull(x) and re.search(r'(\d+\.?\d*)', str(x)) else 0.0)
+    df['Ratings'] = df['Ratings'].apply(lambda x: int(re.sub(r'[^\d]', '', str(x))) # Removed unnecessary group
+                                       if pd.notnull(x) and re.sub(r'[^\d]', '', str(x)) != '' else 0)
+
+    # Створення нових ознак (Features)
+    # Витягуємо рік
+    df['Year'] = df['Edition'].apply(lambda x: int(re.search(r'(\d{4})', str(x)).group(1))
+                                    if re.search(r'(\d{4})', str(x)) else 2010)
+    # Тип обкладинки
+    df['Is_Hardcover'] = df['Edition'].apply(lambda x: 1 if 'Hardcover' in str(x) else 0)
+    # Довжина назви
+    df['Title_Len'] = df['Title'].apply(lambda x: len(str(x).split()))
+
+    # Кодування категоріальних колонок
+    cat_cols = ['Author', 'Genre', 'BookCategory']
+    if is_train:
+        encoders = {}
+        for col in cat_cols:
+            le = LabelEncoder()
+            df[col] = le.fit_transform(df[col].astype(str))
+            encoders[col] = le
+        return df, encoders
+    else:
+        for col in cat_cols:
+            le = encoders[col]
+            # Обробка невідомих категорій у тесті
+            df[col] = df[col].astype(str).map(lambda s: s if s in le.classes_ else le.classes_[0])
+            df[col] = le.transform(df[col])
+        return df
+
+# Apply preprocessing
+df_processed, encoders = preprocess_data(df)
+
+# Define features and target after preprocessing
+features = ['Reviews', 'Ratings', 'Year', 'Is_Hardcover', 'Title_Len'] + \
+           ['Author', 'Genre', 'BookCategory'] # Categorical features already encoded
+X = df_processed[features]
+y = df_processed['Price']
+
+# Split data
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42) # Added random_state for reproducibility
+
+# Train the model
+model = RandomForestRegressor(n_estimators=100, random_state=42)
+model.fit(X_train, y_train)
+
+# Make predictions with the trained model
+y_pred_rf = model.predict(X_test)
+
+# Оцінка моделі RandomForestRegressor
+mae_rf = mean_absolute_error(y_test, y_pred_rf)
+r2_rf = r2_score(y_test, y_pred_rf)
+mse_rf = mean_squared_error(y_test, y_pred_rf)
+
+mape_rf = np.mean(np.abs((y_test - y_pred_rf) / (y_test + 1e-10))) * 100
+accuracy_rf = 100 - mape_rf
+
+print("\nRandomForestRegressor Model Evaluation:")
+print(f"Mean Absolute Error (MAE): {mae_rf:.2f}") # Mean Absolute Error — Середня абсолютна помилка
+print(f"Mean Squared Error (MSE): {mse_rf:.2f}") # Mean Squared Error — Середня квадратична помилка
+print(f"Mean Absolute Percentage Error (MAPE): {mape_rf:.2f}%") # Mean Absolute Percentage Error — Середня абсолютна відсоткова помилка
+print(f"  R-squared (R2): {r2_rf:.2f}")
+print(f"Точність моделі: {accuracy_rf:.2f}%")
+
+import matplotlib.pyplot as plt
+plt.figure(figsize=(10, 10))
+plt.scatter(y_test, y_pred_rf, alpha=0.7, color='yellow')
+plt.plot([min(y_test), max(y_test)], [min(y_test), max(y_test)], '--r', linewidth=2) # Ideal prediction line
+plt.xlabel('Actual Prices')
+plt.ylabel('Predicted Prices (RandomForestRegressor Model)')
+plt.title('Actual vs. Predicted Prices (RandomForestRegressor Regression Model)')
+plt.grid(True)
+plt.show()
+
+# ---------------------------------------
+# ---------------------------------------
+
+# ---------------------------------------
 # ---------------------------------------
 # GradientBoostingRegressor !!! Додано точність моделі = 23.26%
 # ---------------------------------------
