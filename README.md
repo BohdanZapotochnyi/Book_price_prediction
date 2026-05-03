@@ -385,6 +385,11 @@ from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.preprocessing import LabelEncoder, StandardScaler
 import re
+import matplotlib.pyplot as plt
+import io
+import base64
+import IPython.display as display
+
 
 df = pd.read_csv('/content/Book price/train.csv', encoding='latin1', sep=';')
 
@@ -460,7 +465,6 @@ print(f"Mean Absolute Percentage Error (MAPE): {mape_rf:.2f}%") # Mean Absolute 
 print(f"  R-squared (R2): {r2_rf:.2f}")
 print(f"Точність моделі: {accuracy_rf:.2f}%")
 
-import matplotlib.pyplot as plt
 plt.figure(figsize=(10, 10))
 plt.scatter(y_test, y_pred_rf, alpha=0.7, color='yellow')
 plt.plot([min(y_test), max(y_test)], [min(y_test), max(y_test)], '--r', linewidth=2) # Ideal prediction line
@@ -469,6 +473,12 @@ plt.ylabel('Predicted Prices (RandomForestRegressor Model)')
 plt.title('Actual vs. Predicted Prices (RandomForestRegressor Regression Model)')
 plt.grid(True)
 plt.show()
+# Identify data points with the largest prediction errors
+errors = pd.DataFrame({'Actual': y_test, 'Predicted': y_pred_rf, 'Absolute_Error': np.abs(y_test - y_pred_gbr)})
+errors = errors.sort_values(by='Absolute_Error', ascending=False)
+
+print("\nTop 10 data points with the largest prediction errors:")
+display.display(errors.head(10))
 
 # ---------------------------------------
 # ---------------------------------------
@@ -541,6 +551,10 @@ from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.preprocessing import LabelEncoder
 import re
+import matplotlib.pyplot as plt
+import io
+import base64
+import IPython.display as display
 
 df = pd.read_csv('/content/Book price/train.csv', encoding='latin1', sep=';')
 
