@@ -620,7 +620,6 @@ plt.show()
 # RandomForestRegressor 1 !!! Додано точність моделі = 27.69% 
 # ---------------------------------------
 # ---------------------------------------
-# Я додала ознаки з твого коду
 import pandas as pd
 import numpy as np
 from sklearn.metrics import mean_absolute_error, r2_score, mean_squared_error
