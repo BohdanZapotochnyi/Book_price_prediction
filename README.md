@@ -828,6 +828,31 @@ print("\nTop 10 data points with the largest prediction errors:")
 display.display(errors.head(10))
 
 # --------------------------------------
+# --------------------------------------
+# Порівняння абсолютної помилки для моделей : RandomForestRegressor та GradientBoostingRegressor 
+# --------------------------------------
+# --------------------------------------
+import seaborn as sns
+
+# Create a DataFrame to hold absolute errors for both models
+all_errors = pd.DataFrame({
+    'Model': ['RandomForestRegressor'] * len(errors['Absolute_Error']) + ['GradientBoostingRegressor'] * len(errors_gbr['Absolute_Error']),
+    'Absolute_Error': pd.concat([errors['Absolute_Error'], errors_gbr['Absolute_Error']])
+})
+
+plt.figure(figsize=(10, 6))
+sns.violinplot(x='Model', y='Absolute_Error', data=all_errors, hue='Model', palette='muted', legend=False)
+plt.title('Comparison of Absolute Error Distributions Between Models')
+plt.xlabel('Model')
+plt.ylabel('Absolute Error')
+plt.grid(True, linestyle='--', alpha=0.7)
+plt.ylim(0, all_errors['Absolute_Error'].quantile(0.95)) # Limit y-axis for better visualization, excluding extreme outliers
+plt.show()
+
+# --------------------------------------
+# --------------------------------------
+
+# --------------------------------------
 # ---------------------------------------
 # GradientBoostingRegressor 1 !!! Додано точність моделі = 27.88% 
 # ---------------------------------------
