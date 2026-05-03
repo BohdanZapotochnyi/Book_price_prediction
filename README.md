@@ -715,6 +715,10 @@ from sklearn.model_selection import train_test_split
 from sklearn.ensemble import GradientBoostingRegressor
 from sklearn.preprocessing import LabelEncoder, StandardScaler
 import re
+import matplotlib.pyplot as plt
+import io
+import base64
+import IPython.display as display
 
 df = pd.read_csv('/content/Book price/train.csv', encoding='latin1', sep=';')
 
@@ -723,8 +727,10 @@ df = pd.read_csv('/content/Book price/train.csv', encoding='latin1', sep=';')
 df['Price'] = pd.to_numeric(df['Price'], errors='coerce')
 
 # Clean 'Reviews' and 'Ratings' columns to extract numerical values
-df['Reviews'] = df['Reviews'].astype(str).str.extract('(\\d+\\.?\\d*)').astype(float)
-df['Ratings'] = df['Ratings'].astype(str).str.extract('(\\d+)').astype(float)
+# df['Reviews'] = df['Reviews'].astype(str).str.extract('(\\d+\\.?\\d*)').astype(float)
+# df['Ratings'] = df['Ratings'].astype(str).str.extract('(\\d+)').astype(float)
+df['Reviews'] = df['Reviews'].astype(str).str.extract('(\d+\.?\d*)').astype(float)
+df['Ratings'] = df['Ratings'].astype(str).str.extract('(\d+)').astype(float)
 
 # Calculate mean prices by Author and Genre for target encoding
 # Note: Applying target encoding on the full dataframe before splitting can lead to data leakage.
@@ -799,6 +805,13 @@ plt.ylabel('Predicted Prices (GradientBoostingRegressor Model)')
 plt.title('Actual vs. Predicted Prices (GradientBoostingRegressor Model)')
 plt.grid(True)
 plt.show()
+
+# Identify data points with the largest prediction errors
+errors = pd.DataFrame({'Actual': y_test, 'Predicted': y_pred_gbr, 'Absolute_Error': np.abs(y_test - y_pred_gbr)})
+errors = errors.sort_values(by='Absolute_Error', ascending=False)
+
+print("\nTop 10 data points with the largest prediction errors:")
+display.display(errors.head(10))
 
 # --------------------------------------
 # ---------------------------------------
