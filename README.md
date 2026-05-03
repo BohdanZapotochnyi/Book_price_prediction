@@ -383,7 +383,7 @@ import numpy as np
 from sklearn.metrics import mean_absolute_error, r2_score, mean_squared_error
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor
-from sklearn.preprocessing import LabelEncoder
+from sklearn.preprocessing import LabelEncoder, StandardScaler
 import re
 
 df = pd.read_csv('/content/Book price/train.csv', encoding='latin1', sep=';')
