@@ -474,7 +474,7 @@ plt.title('Actual vs. Predicted Prices (RandomForestRegressor Regression Model)'
 plt.grid(True)
 plt.show()
 # Identify data points with the largest prediction errors
-errors = pd.DataFrame({'Actual': y_test, 'Predicted': y_pred_rf, 'Absolute_Error': np.abs(y_test - y_pred_gbr)})
+errors = pd.DataFrame({'Actual': y_test, 'Predicted': y_pred_rf, 'Absolute_Error': np.abs(y_test - y_pred_rf)})
 errors = errors.sort_values(by='Absolute_Error', ascending=False)
 
 print("\nTop 10 data points with the largest prediction errors:")
