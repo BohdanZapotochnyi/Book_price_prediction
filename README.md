@@ -293,6 +293,10 @@ X = X.loc[y.index]
 # Розділення даних на тренувальний та тестовий набори (як і раніше)
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
+# Define features for polynomial expansion and categorical features
+numerical_features = ['Reviews', 'Ratings']
+categorical_features = ['Author_Encoded', 'Genre_Encoded']
+
 # Initialize and train Elastic Net model
 elastic_net_model = ElasticNet(random_state=42)
 elastic_net_model.fit(X_train_combined, y_train)
