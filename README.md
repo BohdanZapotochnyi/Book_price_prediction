@@ -250,7 +250,7 @@ from sklearn.metrics import mean_absolute_error, r2_score, mean_squared_error
 from sklearn.linear_model import ElasticNet, Ridge # Import ElasticNet and Ridge
 from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
-from sklearn.preprocessing import PolynomialFeatures, StandardScaler # Added for self-containment
+from sklearn.preprocessing import StandardScaler
 
 # Load your data
 #df = pd.read_excel('train.xlsx')
@@ -296,6 +296,16 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_
 # Define features for polynomial expansion and categorical features
 numerical_features = ['Reviews', 'Ratings']
 categorical_features = ['Author_Encoded', 'Genre_Encoded']
+
+# Scale Numerical Features
+scaler = StandardScaler()
+X_train_scaled = scaler.fit_transform(X_train[numerical_features])
+X_test_scaled = scaler.transform(X_test[numerical_features])
+
+# Combine scaled numerical features with categorical features
+X_train_combined = np.hstack((X_train_scaled, X_train[categorical_features].values))
+X_test_combined = np.hstack((X_test_scaled, X_test[categorical_features].values))
+# --- End of added preprocessing for self-containment ---
 
 # Initialize and train Elastic Net model
 elastic_net_model = ElasticNet(random_state=42)
