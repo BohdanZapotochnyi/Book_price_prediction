@@ -252,6 +252,43 @@ from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import PolynomialFeatures, StandardScaler # Added for self-containment
 
+# Load your data
+#df = pd.read_excel('train.xlsx')
+df = pd.read_csv('/content/Book price/train.csv', encoding='latin1', sep=';')
+
+# --- Start of added preprocessing for self-containment ---
+# Convert 'Price' to numeric, handling errors by coercing to NaN
+df['Price'] = pd.to_numeric(df['Price'], errors='coerce')
+
+# Clean 'Reviews' and 'Ratings' columns to extract numerical values
+df['Reviews'] = df['Reviews'].astype(str).str.extract('(\\d+\\.?\\d*)').astype(float)
+df['Ratings'] = df['Ratings'].astype(str).str.extract('(\\d+)').astype(float)
+
+# Calculate mean prices by Author and Genre for target encoding
+# Note: Applying target encoding on the full dataframe before splitting can lead to data leakage.
+# For a more robust ML pipeline, target encoding should ideally be calculated on training data only.
+# However, to replicate the kernel state's 'Author_Encoded' and 'Genre_Encoded' as floats,
+# we apply it here for self-containment.
+
+global_mean_price = df['Price'].mean() # Calculate global mean price for filling NaNs
+
+mean_prices_by_author = df.groupby('Author')['Price'].transform('mean')
+mean_prices_by_genre = df.groupby('Genre')['Price'].transform('mean')
+
+df['Author_Encoded'] = mean_prices_by_author
+df['Genre_Encoded'] = mean_prices_by_genre
+
+df['Author_Encoded'] = df['Author_Encoded'].fillna(global_mean_price)
+df['Genre_Encoded'] = df['Genre_Encoded'].fillna(global_mean_price)
+
+# Define X and y using the processed features
+X = df[['Reviews', 'Ratings', 'Author_Encoded', 'Genre_Encoded']]
+y = df['Price']
+
+# Drop rows where y (Price) is NaN, as these cannot be used for training
+# Ensure X and y have the same index after dropping NaNs
+y.dropna(inplace=True)
+X = X.loc[y.index]
 
 # Розділення даних на тренувальний та тестовий набори (як і раніше)
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
