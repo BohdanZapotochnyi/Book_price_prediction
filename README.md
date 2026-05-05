@@ -1,7 +1,6 @@
 # Book_price_prediction
 ML project. Authors: Запоточний Богдан, Коцеловська Марія
 # ==============
-# КОЦЕЛОВСЬКА
 # ==============
 import pandas as pd
 df = pd.read_csv('/content/Book price/train.csv', encoding='latin1', sep=';')
@@ -1410,7 +1409,6 @@ plt.grid(True)
 plt.show()
 
 #======================================================================
-# ЗАПОТОЧНИЙ
 #====================================================================
 # 1. МАГІЧНІ КОМАНДИ ТА ІМПОРТ
 %matplotlib inline
