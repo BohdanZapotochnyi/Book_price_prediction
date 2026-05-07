@@ -325,6 +325,39 @@ plt.grid(axis='y', linestyle='--', alpha=0.7)
 plt.tight_layout()
 plt.show()
 
+# Порівняння R2 Score Accuracy MAE MSE MAPE 
+
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+# List of metrics to plot, along with their y-axis label, title, and sorting order
+metrics_to_plot = [
+    {'col': 'R2 Score', 'ylabel': 'R2 Score', 'title': 'Порівняння R2-оцінок моделей', 'ascending': False, 'ylim': (0, 1)},
+    {'col': 'Accuracy (%)', 'ylabel': 'Точність (%)', 'title': 'Порівняння Точності Моделей', 'ascending': False, 'ylim': (0, 100)},
+    {'col': 'MAE', 'ylabel': 'MAE', 'title': 'Порівняння MAE Моделей', 'ascending': True, 'ylim': (0, None)}, # MAE: lower is better
+    {'col': 'MSE', 'ylabel': 'MSE', 'title': 'Порівняння MSE Моделей', 'ascending': True, 'ylim': (0, None)}, # MSE: lower is better
+    {'col': 'MAPE (%)', 'ylabel': 'MAPE (%)', 'title': 'Порівняння MAPE Моделей', 'ascending': True, 'ylim': (0, None)} # MAPE: lower is better
+]
+
+for metric_info in metrics_to_plot:
+    metric_col = metric_info['col']
+    ylabel = metric_info['ylabel']
+    title = metric_info['title']
+    ascending_sort = metric_info['ascending']
+    ylim_val = metric_info['ylim']
+
+    plt.figure(figsize=(12, 7))
+    sns.barplot(x='Model', y=metric_col, hue='Model', data=results.sort_values(by=metric_col, ascending=ascending_sort), palette='viridis', legend=False)
+    plt.title(title)
+    plt.xlabel('Модель')
+    plt.ylabel(ylabel)
+    if ylim_val[1] is not None: # Apply ylim only if a max value is provided
+        plt.ylim(ylim_val)
+    plt.xticks(rotation=45, ha='right')
+    plt.grid(axis='y', linestyle='--', alpha=0.7)
+    plt.tight_layout()
+    plt.show()
+
 # Загальна таблиця для всіх моделей
 
 results = pd.DataFrame({
