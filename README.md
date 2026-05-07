@@ -1,6 +1,6 @@
 # Book_price_prediction
 ML project. Authors: Запоточний Богдан, Коцеловська Марія
-# ==============
+# =================
 import numpy as np
 import pandas as pd
 from sklearn.metrics import mean_absolute_error, r2_score, mean_squared_error
