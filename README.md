@@ -25,8 +25,12 @@ df.info()
 df['Price'] = pd.to_numeric(df['Price'], errors='coerce')
 
 # Clean 'Reviews' and 'Ratings' columns to extract numerical values
-df['Reviews'] = df['Reviews'].astype(str).str.extract('(\\d+\\.?\\d*)').astype(float)
-df['Ratings'] = df['Ratings'].astype(str).str.extract('(\\d+)').astype(float)
+# df['Reviews'] = df['Reviews'].astype(str).str.extract('(\\d+\\.?\\d*)').astype(float)
+# df['Ratings'] = df['Ratings'].astype(str).str.extract('(\\d+)').astype(float)
+# df['Reviews'] = df['Reviews'].astype(str).str.extract('(\d+\.?\d*)').astype(float)
+# df['Ratings'] = df['Ratings'].astype(str).str.extract('(\d+)').astype(float)
+df['Reviews'] = df['Reviews'].astype(str).str.extract(r'(\d+\.?\d*)').astype(float)
+df['Ratings'] = df['Ratings'].astype(str).str.extract(r'(\d+)').astype(float)
 
 # Calculate mean prices by Author and Genre for target encoding
 # Note: Applying target encoding on the full dataframe before splitting can lead to data leakage.
