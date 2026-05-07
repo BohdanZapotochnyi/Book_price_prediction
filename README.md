@@ -309,6 +309,22 @@ errors = errors.sort_values(by='Absolute_Error', ascending=False)
 print("\nTop 10 data points with the largest prediction errors:")
 display.display(errors.head(10))
 
+# Порівняння R2-оцінок моделей
+
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+plt.figure(figsize=(12, 7))
+sns.barplot(x='Model', y='R2 Score', hue='Model', data=results.sort_values(by='R2 Score', ascending=False), palette='viridis', legend=False)
+plt.title('Порівняння R2-оцінок моделей')
+plt.xlabel('Модель')
+plt.ylabel('R2 Score')
+plt.ylim(0, 1) # R2 score ranges from 0 to 1
+plt.xticks(rotation=45, ha='right')
+plt.grid(axis='y', linestyle='--', alpha=0.7)
+plt.tight_layout()
+plt.show()
+
 # Загальна таблиця для всіх моделей
 
 results = pd.DataFrame({
