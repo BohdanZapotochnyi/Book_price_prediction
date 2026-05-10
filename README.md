@@ -35,6 +35,13 @@ df = pd.read_csv('/content/Book price/train.csv', encoding='latin1', sep=';')
 # Виведення інформації про DataFrame (типи даних, кількість ненульових значень)
 df.info()
 
+# Визначення мінімальної та максимальної ціни
+min_price = df['Price'].min()
+max_price = df['Price'].max()
+
+print(f"Мінімальна ціна: {min_price:.2f}")
+print(f"Максимальна ціна: {max_price:.2f}")
+
 # --- Початок доданої попередньої обробки даних для самостійного виконання ---
 # Перетворення стовпця 'Price' на числовий формат, NaN для некоректних значень
 df['Price'] = pd.to_numeric(df['Price'], errors='coerce')
