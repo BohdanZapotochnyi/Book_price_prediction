@@ -621,6 +621,61 @@ errors = errors.sort_values(by='Absolute_Error', ascending=False)
 
 print("\nTop 10 data points with the largest prediction errors:")
 display.display(errors.head(10))
+# Загальна таблиця для всіх моделей
+
+results = pd.DataFrame({
+    'Model': [
+        'Linear Regression',
+        'Polynomial Regression',
+        'Elastic Net',
+        'Ridge',
+        'RandomForestRegressor',
+        'GradientBoostingRegressor'
+    ],
+    'MAE': [
+        mae,
+        mae_poly,
+        mae_elastic,
+        mae_ridge,
+        mae_rf,
+        mae_gbr
+    ],
+    'MSE': [
+        mse,
+        mse_poly,
+        mse_elastic,
+        mse_ridge,
+        mse_rf,
+        mse_gbr
+    ],
+    'MAPE (%)': [
+        mape,
+        mape_poly,
+        mape_elastic,
+        mape_ridge,
+        mape_rf,
+        mape_gbr
+    ],
+    'R2 Score': [
+        r2,
+        r2_poly,
+        r2_elastic,
+        r2_ridge,
+        r2_rf,
+        r2_gbr
+    ],
+    'Accuracy (%)': [
+        accuracy_in_percent,
+        accuracy_poly,
+        accuracy_elastic,
+        accuracy_ridge,
+        accuracy_rf,
+        accuracy_gbr
+]
+})
+
+# Sort by R2 score for better comparison
+display.display(results.sort_values(by='R2 Score', ascending=False))
 
 # Порівняння R2-оцінок моделей
 
@@ -670,7 +725,8 @@ for metric_info in metrics_to_plot:
     plt.grid(axis='y', linestyle='--', alpha=0.7)
     plt.tight_layout()
     plt.show()
-
+    
+# ----------------------
 # Загальна таблиця для всіх моделей
 
 results = pd.DataFrame({
