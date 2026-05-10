@@ -35,6 +35,17 @@ df = pd.read_csv('/content/Book price/train.csv', encoding='latin1', sep=';')
 # Виведення інформації про DataFrame (типи даних, кількість ненульових значень)
 df.info()
 
+import seaborn as sns
+
+# Гістограма розподілу цін
+plt.figure(figsize=(10, 6))
+sns.histplot(df['Price'], bins=50, kde=True)
+plt.title('Розподіл цін на книги')
+plt.xlabel('Ціна')
+plt.ylabel('Частота')
+plt.grid(True)
+plt.show()
+
 # Визначення мінімальної та максимальної ціни
 min_price = df['Price'].min()
 max_price = df['Price'].max()
