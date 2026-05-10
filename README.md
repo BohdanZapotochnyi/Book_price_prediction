@@ -260,6 +260,10 @@ plot_predictions(y_test, y_pred_gbr, "GradientBoostingRegressor Model", 'brown')
 # Визначення точок даних з найбільшими помилками прогнозування для GradientBoostingRegressor
 display_top_errors(y_test, y_pred_gbr, "GradientBoostingRegressor")
 
+# -----------------------
+
+# -----------------------
+
 import seaborn as sns
 
 # Гістограма розподілу цін
@@ -277,6 +281,115 @@ max_price = df['Price'].max()
 
 print(f"Мінімальна ціна: {min_price:.2f}")
 print(f"Максимальна ціна: {max_price:.2f}")
+
+# -----------------------
+
+# -----------------------
+
+# Загальна таблиця для всіх моделей
+
+results = pd.DataFrame({
+    'Model': [
+        'Linear Regression',
+        'Polynomial Regression',
+        'Elastic Net',
+        'Ridge',
+        'RandomForestRegressor',
+        'GradientBoostingRegressor'
+    ],
+    'MAE': [
+        mae,
+        mae_poly,
+        mae_elastic,
+        mae_ridge,
+        mae_rf,
+        mae_gbr
+    ],
+    'MSE': [
+        mse,
+        mse_poly,
+        mse_elastic,
+        mse_ridge,
+        mse_rf,
+        mse_gbr
+    ],
+    'MAPE (%)': [
+        mape,
+        mape_poly,
+        mape_elastic,
+        mape_ridge,
+        mape_rf,
+        mape_gbr
+    ],
+    'R2 Score': [
+        r2,
+        r2_poly,
+        r2_elastic,
+        r2_ridge,
+        r2_rf,
+        r2_gbr
+    ],
+    'Accuracy (%)': [
+        accuracy_in_percent,
+        accuracy_poly,
+        accuracy_elastic,
+        accuracy_ridge,
+        accuracy_rf,
+        accuracy_gbr
+]
+})
+
+# Sort by R2 score for better comparison
+display.display(results.sort_values(by='R2 Score', ascending=False))
+
+# Порівняння R2-оцінок моделей
+
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+plt.figure(figsize=(12, 7))
+sns.barplot(x='Model', y='R2 Score', hue='Model', data=results.sort_values(by='R2 Score', ascending=False), palette='viridis', legend=False)
+plt.title('Порівняння R2-оцінок моделей')
+plt.xlabel('Модель')
+plt.ylabel('R2 Score')
+plt.ylim(0, 1) # R2 score ranges from 0 to 1
+plt.xticks(rotation=45, ha='right')
+plt.grid(axis='y', linestyle='--', alpha=0.7)
+plt.tight_layout()
+plt.show()
+
+# Порівняння R2 Score Accuracy MAE MSE MAPE 
+
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+# List of metrics to plot, along with their y-axis label, title, and sorting order
+metrics_to_plot = [
+    {'col': 'R2 Score', 'ylabel': 'R2 Score', 'title': 'Порівняння R2-оцінок моделей', 'ascending': False, 'ylim': (0, 1)},
+    {'col': 'Accuracy (%)', 'ylabel': 'Точність (%)', 'title': 'Порівняння Точності Моделей', 'ascending': False, 'ylim': (0, 100)},
+    {'col': 'MAE', 'ylabel': 'MAE', 'title': 'Порівняння MAE Моделей', 'ascending': True, 'ylim': (0, None)}, # MAE: lower is better
+    {'col': 'MSE', 'ylabel': 'MSE', 'title': 'Порівняння MSE Моделей', 'ascending': True, 'ylim': (0, None)}, # MSE: lower is better
+    {'col': 'MAPE (%)', 'ylabel': 'MAPE (%)', 'title': 'Порівняння MAPE Моделей', 'ascending': True, 'ylim': (0, None)} # MAPE: lower is better
+]
+
+for metric_info in metrics_to_plot:
+    metric_col = metric_info['col']
+    ylabel = metric_info['ylabel']
+    title = metric_info['title']
+    ascending_sort = metric_info['ascending']
+    ylim_val = metric_info['ylim']
+
+    plt.figure(figsize=(12, 7))
+    sns.barplot(x='Model', y=metric_col, hue='Model', data=results.sort_values(by=metric_col, ascending=ascending_sort), palette='viridis', legend=False)
+    plt.title(title)
+    plt.xlabel('Модель')
+    plt.ylabel(ylabel)
+    if ylim_val[1] is not None: # Apply ylim only if a max value is provided
+        plt.ylim(ylim_val)
+    plt.xticks(rotation=45, ha='right')
+    plt.grid(axis='y', linestyle='--', alpha=0.7)
+    plt.tight_layout()
+    plt.show()
 
 # ==============
 # Імпорт бібліотеки NumPy для числових операцій
