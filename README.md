@@ -26,17 +26,20 @@ import base64
 # Імпорт модуля для відображення об'єктів в IPython
 import IPython.display as display
 
-# Load your data
+# Завантаження даних
+# Завантаження даних з Excel
 #df = pd.read_excel('train.xlsx')
+# Завантаження даних з CSV-файлу
 df = pd.read_csv('/content/Book price/train.csv', encoding='latin1', sep=';')
 
+# Виведення інформації про DataFrame (типи даних, кількість ненульових значень)
 df.info()
 
-# --- Start of added preprocessing for self-containment ---
-# Convert 'Price' to numeric, handling errors by coercing to NaN
+# --- Початок доданої попередньої обробки даних для самостійного виконання ---
+# Перетворення стовпця 'Price' на числовий формат, NaN для некоректних значень
 df['Price'] = pd.to_numeric(df['Price'], errors='coerce')
 
-# Clean 'Reviews' and 'Ratings' columns to extract numerical values
+# Очищення стовпців 'Reviews' та 'Ratings' для вилучення числових значень
 # df['Reviews'] = df['Reviews'].astype(str).str.extract('(\\d+\\.?\\d*)').astype(float)
 # df['Ratings'] = df['Ratings'].astype(str).str.extract('(\\d+)').astype(float)
 # df['Reviews'] = df['Reviews'].astype(str).str.extract('(\d+\.?\d*)').astype(float)
@@ -50,23 +53,27 @@ df['Ratings'] = df['Ratings'].astype(str).str.extract(r'(\d+)').astype(float)
 # However, to replicate the kernel state's 'Author_Encoded' and 'Genre_Encoded' as floats,
 # we apply it here for self-containment.
 
-global_mean_price = df['Price'].mean() # Calculate global mean price for filling NaNs
+# Розрахунок глобального середнього значення ціни для заповнення пропущених значень
+global_mean_price = df['Price'].mean() 
 
+# Розрахунок середніх цін за автором та жанром для кодування
 mean_prices_by_author = df.groupby('Author')['Price'].transform('mean')
 mean_prices_by_genre = df.groupby('Genre')['Price'].transform('mean')
 
+# Створення нових стовпців для закодованих автора та жанру на основі середніх цін
 df['Author_Encoded'] = mean_prices_by_author
 df['Genre_Encoded'] = mean_prices_by_genre
 
+# Заповнення будь-яких пропущених значень у закодованих стовпцях глобальним середнім значенням ціни
 df['Author_Encoded'] = df['Author_Encoded'].fillna(global_mean_price)
 df['Genre_Encoded'] = df['Genre_Encoded'].fillna(global_mean_price)
 
-# Define X and y using the processed features
+# Визначення ознак (X) та цільової змінної (y) за допомогою оброблених даних
 X = df[['Reviews', 'Ratings', 'Author_Encoded', 'Genre_Encoded']]
 y = df['Price']
 
-# Drop rows where y (Price) is NaN, as these cannot be used for training
-# Ensure X and y have the same index after dropping NaNs
+# Видалення рядків, де y (Price) є NaN, оскільки вони не можуть бути використані для навчання
+# Забезпечення однакових індексів X та y після видалення NaN
 y.dropna(inplace=True)
 X = X.loc[y.index]
 
