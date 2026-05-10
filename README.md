@@ -77,22 +77,22 @@ y = df['Price']
 y.dropna(inplace=True)
 X = X.loc[y.index]
 
-# Розділення даних на тренувальний та тестовий набори (як і раніше)
+# Розділення даних на тренувальний та тестовий набори 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-# Define features for polynomial expansion and categorical features
+# Визначення числових та категоріальних ознак для подальшої обробки
 numerical_features = ['Reviews', 'Ratings']
 categorical_features = ['Author_Encoded', 'Genre_Encoded']
 
-# Scale Numerical Features
+# Масштабування числових ознак
 scaler = StandardScaler()
 X_train_scaled = scaler.fit_transform(X_train[numerical_features])
 X_test_scaled = scaler.transform(X_test[numerical_features])
 
-# Combine scaled numerical features with categorical features
+# Об'єднання масштабованих числових ознак з категоріальними
 X_train_combined = np.hstack((X_train_scaled, X_train[categorical_features].values))
 X_test_combined = np.hstack((X_test_scaled, X_test[categorical_features].values))
-# --- End of added preprocessing for self-containment ---
+# --- Кінець доданої попередньої обробки даних для самостійного виконання ---
 
 # Ініціалізація моделі лінійної регресії
 model = LinearRegression()
