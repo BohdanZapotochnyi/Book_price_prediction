@@ -260,6 +260,24 @@ plot_predictions(y_test, y_pred_gbr, "GradientBoostingRegressor Model", 'brown')
 # Визначення точок даних з найбільшими помилками прогнозування для GradientBoostingRegressor
 display_top_errors(y_test, y_pred_gbr, "GradientBoostingRegressor")
 
+import seaborn as sns
+
+# Гістограма розподілу цін
+plt.figure(figsize=(10, 6))
+sns.histplot(df['Price'], bins=50, kde=True)
+plt.title('Розподіл цін на книги')
+plt.xlabel('Ціна')
+plt.ylabel('Частота')
+plt.grid(True)
+plt.show()
+
+# Визначення мінімальної та максимальної ціни
+min_price = df['Price'].min()
+max_price = df['Price'].max()
+
+print(f"Мінімальна ціна: {min_price:.2f}")
+print(f"Максимальна ціна: {max_price:.2f}")
+
 # ==============
 # Імпорт бібліотеки NumPy для числових операцій
 import numpy as np
@@ -294,24 +312,6 @@ df = pd.read_csv('/content/Book price/train.csv', encoding='latin1', sep=';')
 
 # Виведення інформації про DataFrame (типи даних, кількість ненульових значень)
 df.info()
-
-import seaborn as sns
-
-# Гістограма розподілу цін
-plt.figure(figsize=(10, 6))
-sns.histplot(df['Price'], bins=50, kde=True)
-plt.title('Розподіл цін на книги')
-plt.xlabel('Ціна')
-plt.ylabel('Частота')
-plt.grid(True)
-plt.show()
-
-# Визначення мінімальної та максимальної ціни
-min_price = df['Price'].min()
-max_price = df['Price'].max()
-
-print(f"Мінімальна ціна: {min_price:.2f}")
-print(f"Максимальна ціна: {max_price:.2f}")
 
 # --- Початок доданої попередньої обробки даних для самостійного виконання ---
 # Перетворення стовпця 'Price' на числовий формат, NaN для некоректних значень
