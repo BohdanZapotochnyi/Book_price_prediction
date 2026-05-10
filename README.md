@@ -104,12 +104,15 @@ model.fit(X_train, y_train)
 y_pred = model.predict(X_test)
 
 # Оцінка моделі
+# Розрахунок середньої абсолютної помилки
 mae = mean_absolute_error(y_test, y_pred)
+# Розрахунок коефіцієнта детермінації R2
 r2 = r2_score(y_test, y_pred)
+# Розрахунок середньої квадратичної помилки
 mse = mean_squared_error(y_test, y_pred)
-
-# Розрахунок середньої точності у відсотках
+# Розрахунок середньої абсолютної відсоткової помилки (MAPE)
 mape = np.mean(np.abs((y_test - y_pred) / y_test)) * 100
+# Розрахунок точності у відсотках
 accuracy_in_percent = 100 - mape
 
 print("\nОцінка точності моделі:")
@@ -120,17 +123,26 @@ print(f"R-squared (R2) score: {r2:.2f}")
 print(f"Точність: {accuracy_in_percent:.2f}%") # Те саме число у відсотках
 
 # Графік порівняння реальних цін із прогнозованими моделлю лінійної регресії
+# Встановлення розміру графіка
 plt.figure(figsize=(10, 10))
+# Побудова точкового графіка: реальні vs прогнозовані ціни
 plt.scatter(y_test, y_pred, alpha=0.7, color='orange')
 plt.plot([min(y_test), max(y_test)], [min(y_test), max(y_test)], '--r', linewidth=2) # Ideal prediction line
+# Підпис осі X
 plt.xlabel('Actual Prices')
+# Підпис осі Y
 plt.ylabel('Predicted Prices (Linear Model)')
+# Заголовок графіка
 plt.title('Actual vs. Predicted Prices (Linear Regression Model)')
+# Увімкнення сітки
 plt.grid(True)
+# Відображення графіка
 plt.show()
 
 # Identify data points with the largest prediction errors
+# Створення DataFrame з помилками
 errors = pd.DataFrame({'Actual': y_test, 'Predicted': y_pred, 'Absolute_Error': np.abs(y_test - y_pred)})
+# Сортування за абсолютною помилкою
 errors = errors.sort_values(by='Absolute_Error', ascending=False)
 
 print("\nTop 10 data points with the largest prediction errors:")
@@ -146,11 +158,15 @@ poly_model.fit(X_train_combined, y_train)
 y_pred_poly = poly_model.predict(X_test_combined)
 
 # Оцінка моделі
+# Середня абсолютна помилка
 mae_poly = mean_absolute_error(y_test, y_pred_poly)
+# Коефіцієнт R2
 r2_poly = r2_score(y_test, y_pred_poly)
+# Середня квадратична помилка
 mse_poly = mean_squared_error(y_test, y_pred_poly)
-
+# Розрахунок MAPE для поліноміальної моделі
 mape_poly = np.mean(np.abs((y_test - y_pred_poly) / (y_test + 1e-10))) * 100
+# Точність поліноміальної моделі
 accuracy_poly = 100 - mape_poly
 
 print(f"Mean Absolute Error (MAE): {mae_poly:.2f}") # Mean Absolute Error — Середня абсолютна помилка
