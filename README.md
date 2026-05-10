@@ -1,17 +1,29 @@
 # Book_price_prediction
 ML project. Authors: Запоточний Богдан, Коцеловська Марія
 # ==============
+# Імпорт бібліотеки NumPy для числових операцій
 import numpy as np
+# Імпорт бібліотеки Pandas для роботи з табличними даними
 import pandas as pd
+# Імпорт метрик для оцінки моделі
 from sklearn.metrics import mean_absolute_error, r2_score, mean_squared_error
-from sklearn.linear_model import LinearRegression, ElasticNet, Ridge # Import LinearRegression, ElasticNet and Ridge
+# Імпорт моделей LinearRegression, ElasticNet і Ridge
+from sklearn.linear_model import LinearRegression, ElasticNet, Ridge 
+# Імпорт функції для розділення даних на тренувальні та тестові набори
 from sklearn.model_selection import train_test_split
+# Імпорт ансамблевих моделей регресії
 from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
+# Імпорт інструментів для попередньої обробки даних
 from sklearn.preprocessing import PolynomialFeatures, LabelEncoder, StandardScaler
+# Імпорт модуля для роботи з регулярними виразами
 import re
+# Імпорт бібліотеки Matplotlib для візуалізації даних
 import matplotlib.pyplot as plt
+# Імпорт модуля для роботи з потоками вводу/виводу
 import io
+# Імпорт модуля для кодування/декодування Base64
 import base64
+# Імпорт модуля для відображення об'єктів в IPython
 import IPython.display as display
 
 # Load your data
