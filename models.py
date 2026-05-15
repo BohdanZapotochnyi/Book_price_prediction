@@ -189,15 +189,8 @@ display_top_errors(y_test, y_pred_poly, "Polynomial Regression")
 elastic_net_model = ElasticNet(random_state=42)
 elastic_net_model.fit(X_train_combined, y_train)
 
-# Initialize and train Ridge model
-ridge_net_model = Ridge(random_state=42)
-ridge_net_model.fit(X_train_combined, y_train)
-
 # Predict on the test data using the Elastic Net model
 y_pred_elastic = elastic_net_model.predict(X_test_combined)
-
-# Predict on the test data using the Ridge model
-y_pred_ridge = ridge_net_model.predict(X_test_combined)
 
 # Оцінка моделі Elastic Net
 mae_elastic, mse_elastic, mape_elastic, r2_elastic, accuracy_elastic = evaluate_model(y_test, y_pred_elastic, "Elastic Net")
@@ -207,6 +200,17 @@ plot_predictions(y_test, y_pred_elastic, "Elastic Net Model", 'blue') # Changed 
 
 # Визначення точок даних з найбільшими помилками прогнозування для Elastic Net
 display_top_errors(y_test, y_pred_elastic, "Elastic Net")
+
+# -----------------------
+
+# -----------------------
+
+# Initialize and train Ridge model
+ridge_net_model = Ridge(random_state=42)
+ridge_net_model.fit(X_train_combined, y_train)
+
+# Predict on the test data using the Ridge model
+y_pred_ridge = ridge_net_model.predict(X_test_combined)
 
 # Оцінка моделі Ridge
 mae_ridge, mse_ridge, mape_ridge, r2_ridge, accuracy_ridge = evaluate_model(y_test, y_pred_ridge, "Ridge Regression")
