@@ -141,6 +141,7 @@ X_test_combined = np.hstack((X_test_scaled, X_test[categorical_features].values)
 # --- Кінець доданої попередньої обробки даних для самостійного виконання ---
 
 # -----------------------
+# -----------------------
 
 # Ініціалізація моделі лінійної регресії
 model = LinearRegression()
@@ -177,7 +178,8 @@ df_test_processed['Genre_Encoded'] = df_test_processed['Genre'].map(genre_price_
 X_test_final = df_test_processed[['Reviews', 'Ratings', 'Author_Encoded', 'Genre_Encoded']]
 
 # Make predictions on the preprocessed test data
-y_pred_1 = model.predict(X_test_final)
+# y_pred_1 = model.predict(X_test_final)
+y_pred_1 = np.maximum(0, model.predict(X_test_final_combined_for_linear))
 
 # Оцінка моделі Linear Regression
 mae, mse, mape, r2, accuracy_in_percent = evaluate_model(df_sample_submission['Price'], y_pred_1, "Linear Regression for test")
@@ -187,3 +189,55 @@ plot_predictions(df_sample_submission['Price'], y_pred_1, "Linear Regression Mod
 
 # Визначення точок даних з найбільшими помилками прогнозування
 display_top_errors(df_sample_submission['Price'], y_pred_1, "Linear Regression for test")
+
+# -----------------------
+# -----------------------
+
+# Ініціалізація моделі лінійної регресії для поліноміальних ознак
+poly_model = LinearRegression()
+
+# Навчання моделі з комбінованими ознаками
+poly_model.fit(X_train_combined, y_train)
+
+# Прогнозування на тестовому наборі
+y_pred_poly = poly_model.predict(X_test_combined)
+
+# Оцінка моделі Polynomial Regression
+mae_poly, mse_poly, mape_poly, r2_poly, accuracy_poly = evaluate_model(y_test, y_pred_poly, "Polynomial Regression")
+
+# Графік порівняння реальних цін із прогнозованими моделлю пліноміальної регресії
+plot_predictions(y_test, y_pred_poly, "Polynomial Regression", 'purple')
+
+# Визначення точок даних з найбільшими помилками прогнозування для поліноміальної моделі
+display_top_errors(y_test, y_pred_poly, "Polynomial Regression")
+
+# -----------------------
+
+# Preprocess df_test in the same way as df for training
+df_test_processed = df_test.copy()
+
+# Clean 'Reviews' and 'Ratings' for df_test_processed
+df_test_processed['Reviews'] = df_test_processed['Reviews'].astype(str).str.extract(r'(\d+\.?\d*)').astype(float)
+df_test_processed['Ratings'] = df_test_processed['Ratings'].astype(str).str.extract(r'(\d+)').astype(float)
+
+# Apply target encoding to df_test_processed using mappings from training data
+df_test_processed['Author_Encoded'] = df_test_processed['Author'].map(author_price_map).fillna(global_mean_price)
+df_test_processed['Genre_Encoded'] = df_test_processed['Genre'].map(genre_price_map).fillna(global_mean_price)
+
+# Scaling numerical features for df_test_processed using the same scaler
+X_test_processed_scaled_numerical = scaler.transform(df_test_processed[numerical_features])
+
+# Combine scaled numerical features with encoded categorical features for df_test_processed
+X_test_final_combined_for_poly = np.hstack((X_test_processed_scaled_numerical, df_test_processed[categorical_features].values))
+
+# Make predictions on the preprocessed test data
+y_pred_poly_1 = np.maximum(0, poly_model.predict(X_test_final_combined_for_poly))
+
+# Оцінка моделі Polynomial Regression
+mae_poly, mse_poly, mape_poly, r2_poly, accuracy_poly = evaluate_model(df_sample_submission['Price'], y_pred_poly_1, "Polynomial Regression for test")
+
+# Графік порівняння реальних цін із прогнозованими моделлю пліноміальної регресії
+plot_predictions(df_sample_submission['Price'], y_pred_poly_1, "Polynomial Regression for test", 'purple')
+
+# Визначення точок даних з найбільшими помилками прогнозування
+display_top_errors(df_sample_submission['Price'], y_pred_poly_1, "Polynomial Regression for test")
