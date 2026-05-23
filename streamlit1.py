@@ -109,8 +109,8 @@ if st.button('Прогнозувати ціну'):
     scaler1 = StandardScaler()
     X_predict_scaled_numerical1 = scaler1.transform(X_predict_input[numerical_features1])
     X_predict_combined1 = np.hstack((X_predict_scaled_numerical1, X_predict_input[categorical_features1].values))
+  
 
-    
     linear_pred = model.predict(X_predict_combined1)[0]
     poly_pred = poly_model.predict(X_predict_combined1)[0]
     elastic_test_pred = elastic_net_model.predict(X_predict_combined1)[0]
