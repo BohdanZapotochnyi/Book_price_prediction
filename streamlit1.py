@@ -1,8 +1,14 @@
-# Вивід у додатку
 
 import streamlit as st
 import pandas as pd
 import numpy as np
+
+def load_and_preprocess_data(train.csv):
+    try:
+        df = pd.read_csv(train.csv, encoding='latin1', sep=';', engine='python', on_bad_lines='warn')
+    except FileNotFoundError:
+        st.error(f"Помилка: файл '{file_path}' не знайдено. Переконайтеся, що він знаходиться в правильному шляху.")
+        st.stop()
 
 st.title('Book price prediction')
 
