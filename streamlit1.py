@@ -98,10 +98,10 @@ if st.button('Прогнозувати ціну'):
     X_predict_combined = np.hstack((X_predict_scaled_numerical, X_predict[categorical_features].values))
     linear_pred = model.predict(X_predict_combined)[0]
     poly_pred = poly_model.predict(X_predict_combined)[0]
-    elastic_test_pred = elastic_net_model.predict(X_test_predict_combined)
-    ridge_test_pred = ridge_net_model.predict(X_test_predict_combined)
-    rf_test_pred = model.predict(X_test_predict) # Re-using 'model' from RandomForestRegressor training block
-    gbr_test_pred = gbr_model.predict(X_test_predict)
+    elastic_test_pred = elastic_net_model.predict(X_predict_combined)[0]
+    ridge_test_pred = ridge_net_model.predict(X_predict_combined)[0]
+    rf_test_pred = model.predict(X_predict)[0] 
+    gbr_test_pred = gbr_model.predict(X_predict)[0]
 
     #input_data['Author_Encoded'] = input_data['Author'].map(mean_prices_by_author)
     #input_data['Genre_Encoded'] = input_data['Genre'].map(mean_prices_by_genre)
