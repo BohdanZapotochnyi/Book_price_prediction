@@ -1,27 +1,21 @@
+# Вивід у додатку
+
 import streamlit as st
 import pandas as pd
 import numpy as np
 
-# Завантаження даних
+st.title('Book price prediction')
 
-def load_and_preprocess_data(file_path):
-    try:
-        df = pd.read_csv(file_path, encoding='latin1', sep=';', engine='python', on_bad_lines='warn')
-    except FileNotFoundError:
-        st.error(f"Помилка: файл '{file_path}' не знайдено. Переконайтеся, що він знаходиться в правильному шляху.")
-        st.stop()
+st.subheader('Enter book information:')
 
-# Вивід у додатку
-
-st.title('Прогнозування цін на книги')
-
-st.subheader('Введіть інформацію про книгу:')
-
-title = st.text_input('Назва книги')
-author = st.text_input('Автор')
-genre = st.text_input('Жанр')
-reviews = st.number_input('Рейтинги (кількість відгуків)', min_value=0.0, value=4.4, step=0.1)
-ratings = st.number_input('Оцінки (кількість зірок)')
+title = st.text_input('Book title')
+author = st.text_input('Book author')
+edition  =  st.text_input('Book edition ') 
+genre = st.text_input('Book genre')
+reviews = st.number_input('Book reviews', min_value=0.0, value=4.4, step=0.1)
+ratings = st.number_input('Book ratings',step=1)
+Synopsis  =  st.text_input('Book synopsis ')   
+BookCategory  =  st.text_input('Book category ') 
 
 if st.button('Прогнозувати ціну'):
     input_data = pd.DataFrame({
@@ -33,6 +27,18 @@ if st.button('Прогнозувати ціну'):
 
 st.subheader('Прогнозовані ціни:')
 t.metric(label="Linear Regression", value=f"{linear_pred:.2f} ")
+
+
+# Завантаження даних
+
+def load_and_preprocess_data(file_path):
+    try:
+        df = pd.read_csv(file_path, encoding='latin1', sep=';', engine='python', on_bad_lines='warn')
+    except FileNotFoundError:
+        st.error(f"Помилка: файл '{file_path}' не знайдено. Переконайтеся, що він знаходиться в правильному шляху.")
+        st.stop()
+
+
 
 # LinearRegression
 
