@@ -60,6 +60,9 @@ ridge_net_model.fit(X_train_combined, y_train)
 model = RandomForestRegressor(n_estimators=100, random_state=42)
 model.fit(X_train, y_train)
 
+gbr_model = GradientBoostingRegressor(n_estimators=100, learning_rate=0.1, max_depth=3, random_state=42)
+gbr_model.fit(X_train, y_train)
+
 st.title('Book price prediction')
 
 st.subheader('Enter book information:')
