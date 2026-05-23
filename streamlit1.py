@@ -78,10 +78,10 @@ bookcategory  =  st.text_input('Book category ')
 
 if st.button('Прогнозувати ціну'):
     input_data = pd.DataFrame({
-        'Reviews1': [reviews],
-        'Ratings1': [ratings],
-        'Author1': [author],
-        'Genre1': [genre]
+        'Reviews': [reviews],
+        'Ratings': [ratings],
+        'Author': [author],
+        'Genre': [genre]
     })
     
     #input_data['Reviews'] = input_data['Reviews'].astype(str).str.extract(r'(\d+\.?\d*)').astype(float)
@@ -96,27 +96,24 @@ if st.button('Прогнозувати ціну'):
     #X_predict_scaled_numerical = scaler.transform(X_predict[numerical_features])
     #X_predict_combined = np.hstack((X_predict_scaled_numerical, X_predict[categorical_features].values))
 
-    input_data['Author_Encoded1'] = input_data['Author1'].map(mean_prices_by_author)
-    input_data['Genre_Encoded1'] = input_data['Genre1'].map(mean_prices_by_genre)
-    input_data['Author_Encoded1'] = input_data['Author_Encoded1'].fillna(global_mean_price)
-    input_data['Genre_Encoded1'] = input_data['Genre_Encoded1'].fillna(global_mean_price)
-    X_predict_input = input_data[['Reviews1', 'Ratings1', 'Author_Encoded1', 'Genre_Encoded1']]
-    for col in ['Reviews1', 'Ratings1']:
+    input_data['Author_Encoded'] = input_data['Author'].map(mean_prices_by_author)
+    input_data['Genre_Encoded'] = input_data['Genre'].map(mean_prices_by_genre)
+    input_data['Author_Encoded'] = input_data['Author_Encoded'].fillna(global_mean_price)
+    input_data['Genre_Encoded'] = input_data['Genre_Encoded'].fillna(global_mean_price)
+    X_predict_input = input_data[['Reviews', 'Ratings', 'Author_Encoded', 'Genre_Encoded']]
+    for col in ['Reviews', 'Ratings']:
         col_mean_input = X_predict_input[col].mean() 
         X_predict_input.loc[:, col] = X_predict_input.loc[:, col].fillna(col_mean_input if not pd.isna(col_mean_input) else 0)
-    numerical_features1 = ['Reviews1', 'Ratings1']
-    categorical_features1 = ['Author_Encoded1', 'Genre_Encoded1']
-    scaler1 = StandardScaler()
-    X_predict_scaled_numerical1 = scaler1.transform(X_predict_input[numerical_features1])
-    X_predict_combined1 = np.hstack((X_predict_scaled_numerical1, X_predict_input[categorical_features1].values))
+    X_predict_scaled_numerical = scaler.transform(X_predict_input[numerical_features])
+    X_predict_combined = np.hstack((X_predict_scaled_numerical1, X_predict_input[categorical_features].values))
   
 
-    linear_pred = model.predict(X_predict_combined1)[0]
-    poly_pred = poly_model.predict(X_predict_combined1)[0]
-    elastic_test_pred = elastic_net_model.predict(X_predict_combined1)[0]
-    ridge_test_pred = ridge_net_model.predict(X_predict_combined1)[0]
-    rf_test_pred = model.predict(X_predict_combined1)[0] 
-    gbr_test_pred = gbr_model.predict(X_predict_combined1)[0]
+    linear_pred = model.predict(X_predict_combined)[0]
+    poly_pred = poly_model.predict(X_predict_combined)[0]
+    elastic_test_pred = elastic_net_model.predict(X_predict_combined)[0]
+    ridge_test_pred = ridge_net_model.predict(X_predict_combined)[0]
+    rf_test_pred = model.predict(X_predict_combined)[0] 
+    gbr_test_pred = gbr_model.predict(X_predict_combined)[0]
 
    
     
