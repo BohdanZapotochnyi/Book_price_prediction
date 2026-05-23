@@ -25,65 +25,9 @@ from IPython.display import display
 
 # -----------------------
 
-# Завантаження даних
-# Завантаження даних з Excel
-#df = pd.read_excel('train.xlsx')
-# Завантаження даних з CSV-файлу
 df = pd.read_csv('/content/Book price/train.csv', encoding='latin1', sep=';', engine='python', on_bad_lines='warn')
 
-# Оцінки моделей
-def evaluate_model(y_true, y_pred, model_name):
-    mae = mean_absolute_error(y_true, y_pred) # Розрахунок середньої абсолютної помилки
-    mse = mean_squared_error(y_true, y_pred) # Розрахунок середньої квадратичної помилки
-    # Додаємо невелике значення до y_true, щоб уникнути ділення на нуль при обчисленні MAPE
-    mape = np.mean(np.abs((y_true - y_pred) / (y_true + 1e-10))) * 100
-    r2 = r2_score(y_true, y_pred) # Розрахунок коефіцієнта детермінації R2
-    accuracy = 100 - mape # Розрахунок точності у відсотках
-    print(f"\n{model_name} Model Evaluation:") # Adjusted print statement to be generic
-    print(f"  Mean Absolute Error (MAE): {mae:.2f}")
-    print(f"  Mean Squared Error (MSE): {mse:.2f}")
-    print(f"  Mean Absolute Percentage Error (MAPE): {mape:.2f}%")
-    print(f"  R-squared (R2): {r2:.2f}")
-    print(f"  Accuracy: {accuracy:.2f}%")
-    return mae, mse, mape, r2, accuracy
 
-# Графік порівняння реальних цін із прогнозованими моделлю
-def plot_predictions(y_true, y_pred, model_title, plot_color):
-    """
-    Generates a scatter plot comparing actual vs. predicted values for a given model.
-
-    Args:
-        y_true (pd.Series): Actual values.
-        y_pred (np.array): Predicted values.
-        model_title (str): Title for the plot and Y-axis label.
-        plot_color (str): Color for the scatter points.
-    """
-    plt.figure(figsize=(10, 10)) # Встановлення розміру графіка
-    plt.scatter(y_true, y_pred, alpha=0.7, color=plot_color) # Побудова точкового графіка: реальні vs прогнозовані ціни
-    plt.plot([min(y_true), max(y_true)], [min(y_true), max(y_true)], '--r', linewidth=2) # Ideal prediction line
-    plt.xlabel('Actual Prices') # Підпис осі X
-    plt.ylabel(f'Predicted Prices ({model_title})') # Підпис осі Y
-    plt.title(f'Actual vs. Predicted Prices ({model_title})') # Заголовок графіка
-    plt.grid(True) # Увімкнення сітки
-    plt.show() # Відображення графіка
-
-# Визначення точок даних з найбільшими помилками прогнозування
-def display_top_errors(y_true, y_pred, model_name, top_n=10):
-    """
-    Identifies and displays the top N data points with the largest prediction errors.
-
-    Args:
-        y_true (pd.Series): Actual values.
-        y_pred (np.array): Predicted values.
-        model_name (str): Name of the model for display purposes.
-        top_n (int): The number of top errors to display.
-    """
-    errors_df = pd.DataFrame({'Actual': y_true, 'Predicted': y_pred, 'Absolute_Error': np.abs(y_true - y_pred)}) # Створення DataFrame з помилками
-    errors_df = errors_df.sort_values(by='Absolute_Error', ascending=False) # Сортування за абсолютною помилкою
-    print(f"\nTop {top_n} data points with the largest prediction errors for {model_name}:")
-    display(errors_df.head(top_n))
-
-# -----------------------
 
 # --- Початок доданої попередньої обробки даних для самостійного виконання ---
 # Перетворення стовпця 'Price' на числовий формат, NaN для некоректних значень
@@ -151,15 +95,6 @@ model.fit(X_train, y_train)
 # Прогнозування на тестовому наборі
 y_pred = model.predict(X_test)
 
-# Оцінка моделі Linear Regression
-mae, mse, mape, r2, accuracy_in_percent = evaluate_model(y_test, y_pred, "Linear Regression")
-
-# Графік порівняння реальних цін із прогнозованими моделлю лінійної регресії
-plot_predictions(y_test, y_pred, "Linear Regression Model", 'orange')
-
-# Визначення точок даних з найбільшими помилками прогнозування
-display_top_errors(y_test, y_pred, "Linear Regression")
-
 # -----------------------
 
 # -----------------------
@@ -172,14 +107,6 @@ poly_model.fit(X_train_combined, y_train)
 # Прогнозування на тестовому наборі
 y_pred_poly = poly_model.predict(X_test_combined)
 
-# Оцінка моделі Polynomial Regression
-mae_poly, mse_poly, mape_poly, r2_poly, accuracy_poly = evaluate_model(y_test, y_pred_poly, "Polynomial Regression")
-
-# Графік порівняння реальних цін із прогнозованими моделлю пліномінальної регресії
-plot_predictions(y_test, y_pred_poly, "Polynomial Regression", 'purple')
-
-# Визначення точок даних з найбільшими помилками прогнозування для поліноміальної моделі
-display_top_errors(y_test, y_pred_poly, "Polynomial Regression")
 
 # -----------------------
 
@@ -192,14 +119,7 @@ elastic_net_model.fit(X_train_combined, y_train)
 # Predict on the test data using the Elastic Net model
 y_pred_elastic = elastic_net_model.predict(X_test_combined)
 
-# Оцінка моделі Elastic Net
-mae_elastic, mse_elastic, mape_elastic, r2_elastic, accuracy_elastic = evaluate_model(y_test, y_pred_elastic, "Elastic Net")
 
-# Графік порівняння реальних цін із прогнозованими Elastic Net Model
-plot_predictions(y_test, y_pred_elastic, "Elastic Net Model", 'blue') # Changed color to blue for distinction
-
-# Визначення точок даних з найбільшими помилками прогнозування для Elastic Net
-display_top_errors(y_test, y_pred_elastic, "Elastic Net")
 
 # -----------------------
 
@@ -212,14 +132,6 @@ ridge_net_model.fit(X_train_combined, y_train)
 # Predict on the test data using the Ridge model
 y_pred_ridge = ridge_net_model.predict(X_test_combined)
 
-# Оцінка моделі Ridge
-mae_ridge, mse_ridge, mape_ridge, r2_ridge, accuracy_ridge = evaluate_model(y_test, y_pred_ridge, "Ridge Regression")
-
-# Графік порівняння реальних цін із прогнозованими Ridge Model
-plot_predictions(y_test, y_pred_ridge, "Ridge Model", 'green')
-
-# Визначення точок даних з найбільшими помилками прогнозування для Ridge
-display_top_errors(y_test, y_pred_ridge, "Ridge Regression")
 
 # -----------------------
 
@@ -232,14 +144,6 @@ model.fit(X_train, y_train)
 # Make predictions with the trained model
 y_pred_rf = model.predict(X_test)
 
-# Оцінка моделі RandomForestRegressor
-mae_rf, mse_rf, mape_rf, r2_rf, accuracy_rf = evaluate_model(y_test, y_pred_rf, "RandomForestRegressor")
-
-# Графік порівняння реальних цін із прогнозованими RandomForestRegressor Model
-plot_predictions(y_test, y_pred_rf, "RandomForestRegressor Model", 'yellow')
-
-# Визначення точок даних з найбільшими помилками прогнозування для RandomForestRegressor
-display_top_errors(y_test, y_pred_rf, "RandomForestRegressor")
 
 # -----------------------
 
@@ -251,37 +155,6 @@ gbr_model.fit(X_train, y_train)
 
 # Make predictions with the trained model
 y_pred_gbr = gbr_model.predict(X_test)
-
-# Оцінка моделі GradientBoostingRegressor
-mae_gbr, mse_gbr, mape_gbr, r2_gbr, accuracy_gbr = evaluate_model(y_test, y_pred_gbr, "GradientBoostingRegressor")
-
-# Графік порівняння реальних цін із прогнозованими GradientBoostingRegressor Model
-plot_predictions(y_test, y_pred_gbr, "GradientBoostingRegressor Model", 'brown')
-
-# Визначення точок даних з найбільшими помилками прогнозування для GradientBoostingRegressor
-display_top_errors(y_test, y_pred_gbr, "GradientBoostingRegressor")
-
-# -----------------------
-
-# -----------------------
-
-import seaborn as sns
-
-# Гістограма розподілу цін
-plt.figure(figsize=(10, 6))
-sns.histplot(df['Price'], bins=50, kde=True)
-plt.title('Розподіл цін на книги')
-plt.xlabel('Ціна')
-plt.ylabel('Частота')
-plt.grid(True)
-plt.show()
-
-# Визначення мінімальної та максимальної ціни
-min_price = df['Price'].min()
-max_price = df['Price'].max()
-
-print(f"Мінімальна ціна: {min_price:.2f}")
-print(f"Максимальна ціна: {max_price:.2f}")
 
 # -----------------------
 
