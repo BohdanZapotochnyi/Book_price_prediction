@@ -17,11 +17,11 @@ st.title('Прогнозування цін на книги')
 
 st.subheader('Введіть інформацію про книгу:')
 
-title = st.text_input('Назва книги', 'The Complete Sherlock Holmes')
-author = st.text_input('Автор', 'Sir Arthur Conan Doyle')
-genre = st.text_input('Жанр', 'Mystery & Detective')
+title = st.text_input('Назва книги')
+author = st.text_input('Автор')
+genre = st.text_input('Жанр')
 reviews = st.number_input('Рейтинги (кількість відгуків)', min_value=0.0, value=4.4, step=0.1)
-ratings = st.number_input('Оцінки (кількість зірок)', min_value=0.0, value=960.0, step=1.0)
+ratings = st.number_input('Оцінки (кількість зірок)')
 
 if st.button('Прогнозувати ціну'):
     input_data = pd.DataFrame({
