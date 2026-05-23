@@ -77,7 +77,7 @@ if st.button('Прогнозувати ціну'):
     input_data['Genre_Encoded'] = input_data['Genre'].map(mean_prices_by_genre.fillna(global_mean_price))
     input_data['Author_Encoded'] = input_data['Author_Encoded'].fillna(global_mean_price)
     input_data['Genre_Encoded'] = input_data['Genre_Encoded'].fillna(global_mean_price)
-    X_predict = input_data['Reviews', 'Ratings', 'Author_Encoded', 'Genre_Encoded']]
+    X_predict = input_data[['Reviews', 'Ratings', 'Author_Encoded', 'Genre_Encoded']]
     X_predict['Reviews'] = X_predict['Reviews'].fillna(X_train['Reviews'].mean())
     X_predict['Ratings'] = X_predict['Ratings'].fillna(X_train['Ratings'].mean())
     X_predict_scaled_numerical = scaler.transform(X_test_predict[numerical_features])
