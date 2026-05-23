@@ -96,24 +96,27 @@ if st.button('Прогнозувати ціну'):
     #X_predict_scaled_numerical = scaler.transform(X_predict[numerical_features])
     #X_predict_combined = np.hstack((X_predict_scaled_numerical, X_predict[categorical_features].values))
 
-    input_data['Author_Encoded'] = input_data['Author1'].map(mean_prices_by_author)
-    input_data['Genre_Encoded'] = input_data['Genre1'].map(mean_prices_by_genre)
-    input_data['Author_Encoded'] = input_data['Author_Encoded'].fillna(global_mean_price)
-    input_data['Genre_Encoded'] = input_data['Genre_Encoded'].fillna(global_mean_price)
-    X_predict_input = input_data[['Reviews1', 'Ratings1', 'Author_Encoded', 'Genre_Encoded']]
+    input_data['Author_Encoded1'] = input_data['Author1'].map(mean_prices_by_author)
+    input_data['Genre_Encoded1'] = input_data['Genre1'].map(mean_prices_by_genre)
+    input_data['Author_Encoded1'] = input_data['Author_Encoded1'].fillna(global_mean_price)
+    input_data['Genre_Encoded1'] = input_data['Genre_Encoded1'].fillna(global_mean_price)
+    X_predict_input = input_data[['Reviews1', 'Ratings1', 'Author_Encoded1', 'Genre_Encoded1']]
     for col in ['Reviews1', 'Ratings1']:
         col_mean_input = X_predict_input[col].mean() 
         X_predict_input.loc[:, col] = X_predict_input.loc[:, col].fillna(col_mean_input if not pd.isna(col_mean_input) else 0)
-    X_predict_scaled_numerical = scaler.transform(X_predict_input[numerical_features])
-    X_predict_combined = np.hstack((X_predict_scaled_numerical, X_predict_input[categorical_features].values))
+    numerical_features1 = ['Reviews1', 'Ratings1']
+    categorical_features1 = ['Author_Encoded1', 'Genre_Encoded1']
+    scaler = StandardScaler()
+    X_predict_scaled_numerical1 = scaler.transform(X_predict_input[numerical_features1])
+    X_predict_combined1 = np.hstack((X_predict_scaled_numerical1, X_predict_input[categorical_features1].values))
 
     
-    linear_pred = model.predict(X_predict_combined)[0]
-    poly_pred = poly_model.predict(X_predict_combined)[0]
-    elastic_test_pred = elastic_net_model.predict(X_predict_combined)[0]
-    ridge_test_pred = ridge_net_model.predict(X_predict_combined)[0]
-    rf_test_pred = model.predict(X_predict_combined)[0] 
-    gbr_test_pred = gbr_model.predict(X_predict_combined)[0]
+    linear_pred = model.predict(X_predict_combined1)[0]
+    poly_pred = poly_model.predict(X_predict_combined1)[0]
+    elastic_test_pred = elastic_net_model.predict(X_predict_combined1)[0]
+    ridge_test_pred = ridge_net_model.predict(X_predict_combined1)[0]
+    rf_test_pred = model.predict(X_predict_combined1)[0] 
+    gbr_test_pred = gbr_model.predict(X_predict_combined1)[0]
 
    
     
