@@ -86,7 +86,7 @@ if st.button('Прогнозувати ціну'):
     X_predict_scaled_numerical = scaler.transform(X_predict[numerical_features])
     X_predict_combined = np.hstack((X_predict_scaled_numerical, X_predict[categorical_features].values))
     linear_pred = model.predict(X_predict_combined)[0]
-    poly_pred = poly_model.predict(X_predict_combined)
+    poly_pred = poly_model.predict(X_predict_combined)[0]
 
     #input_data['Author_Encoded'] = input_data['Author'].map(mean_prices_by_author)
     #input_data['Genre_Encoded'] = input_data['Genre'].map(mean_prices_by_genre)
