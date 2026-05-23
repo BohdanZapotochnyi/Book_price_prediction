@@ -106,8 +106,8 @@ if st.button('Прогнозувати ціну'):
         X_predict_input.loc[:, col] = X_predict_input.loc[:, col].fillna(col_mean_input if not pd.isna(col_mean_input) else 0)
     numerical_features1 = ['Reviews1', 'Ratings1']
     categorical_features1 = ['Author_Encoded1', 'Genre_Encoded1']
-    scaler = StandardScaler()
-    X_predict_scaled_numerical1 = scaler.transform(X_predict_input[numerical_features1])
+    scaler1 = StandardScaler()
+    X_predict_scaled_numerical1 = scaler1.transform(X_predict_input[numerical_features1])
     X_predict_combined1 = np.hstack((X_predict_scaled_numerical1, X_predict_input[categorical_features1].values))
 
     
