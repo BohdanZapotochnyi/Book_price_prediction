@@ -51,6 +51,8 @@ model.fit(X_train, y_train)
 poly_model = LinearRegression()
 poly_model.fit(X_train_combined, y_train)
 
+elastic_net_model = ElasticNet(random_state=42)
+elastic_net_model.fit(X_train_combined, y_train)
 
 st.title('Book price prediction')
 
