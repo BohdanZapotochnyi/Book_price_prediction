@@ -70,38 +70,32 @@ if st.button('Прогнозувати ціну'):
         'Genre': [genre]
     })
 
-    if 'Price' in df_test.columns:
-        df_test['Price'] = pd.to_numeric(df_test['Price'], errors='coerce')
-    df_test['Reviews'] = df_test['Reviews'].astype(str).str.extract(r'(\d+\.?\d*)').astype(float)
-    df_test['Ratings'] = df_test['Ratings'].astype(str).str.extract(r'(\d+)').astype(float)
-    df_test['Author_Encoded'] = df_test['Author'].map(mean_prices_by_author.fillna(global_mean_price))
-    df_test['Genre_Encoded'] = df_test['Genre'].map(mean_prices_by_genre.fillna(global_mean_price))
-    df_test['Author_Encoded'] = df_test['Author_Encoded'].fillna(global_mean_price)
-    df_test['Genre_Encoded'] = df_test['Genre_Encoded'].fillna(global_mean_price)
-    X_test_predict = df_test[['Reviews', 'Ratings', 'Author_Encoded', 'Genre_Encoded']]
-    X_test_predict['Reviews'] = X_test_predict['Reviews'].fillna(X_train['Reviews'].mean())
-    X_test_predict['Ratings'] = X_test_predict['Ratings'].fillna(X_train['Ratings'].mean())
-    X_test_predict_scaled_numerical = scaler.transform(X_test_predict[numerical_features])
-    X_test_predict_combined = np.hstack((X_test_predict_scaled_numerical, X_test_predict[categorical_features].values))
-
+    
+    input_data[['Reviews'] = input_data[['Reviews'].astype(str).str.extract(r'(\d+\.?\d*)').astype(float)
+    input_data[['Ratings'] = input_data[['Ratings'].astype(str).str.extract(r'(\d+)').astype(float)
+    input_data[['Author_Encoded'] = input_data[['Author'].map(mean_prices_by_author.fillna(global_mean_price))
+    input_data[['Genre_Encoded'] = input_data[['Genre'].map(mean_prices_by_genre.fillna(global_mean_price))
+    input_data[['Author_Encoded'] = input_data[['Author_Encoded'].fillna(global_mean_price)
+    input_data[['Genre_Encoded'] = input_data[['Genre_Encoded'].fillna(global_mean_price)
+    X_predict = input_data[[['Reviews', 'Ratings', 'Author_Encoded', 'Genre_Encoded']]
+    X_predict['Reviews'] = X_predict['Reviews'].fillna(X_train['Reviews'].mean())
+    X_predict['Ratings'] = X_predict['Ratings'].fillna(X_train['Ratings'].mean())
+    X_predict_scaled_numerical = scaler.transform(X_test_predict[numerical_features])
+    X_predict_combined = np.hstack((X_test_predict_scaled_numerical, X_test_predict[categorical_features].values))
+    linear_pred = model.predict(X_predict_combined)[0]
+------
     #input_data['Author_Encoded'] = input_data['Author'].map(mean_prices_by_author)
     #input_data['Genre_Encoded'] = input_data['Genre'].map(mean_prices_by_genre)
-
     #input_data['Author_Encoded'] = input_data['Author_Encoded'].fillna(global_mean_price)
     #input_data['Genre_Encoded'] = input_data['Genre_Encoded'].fillna(global_mean_price)
-
     #X_predict_input = input_data[['Reviews', 'Ratings', 'Author_Encoded', 'Genre_Encoded']]
-
     #for col in ['Reviews', 'Ratings']:
     #    col_mean_input = X_predict_input[col].mean() # Should be just the input value, but for consistency
     #    X_predict_input.loc[:, col] = X_predict_input.loc[:, col].fillna(col_mean_input if not pd.isna(col_mean_input) else 0)
-
     #X_predict_scaled_numerical = feature_scaler.transform(X_predict_input[numerical_features])
-
     #X_predict_combined = np.hstack((X_predict_scaled_numerical, X_predict_input[categorical_features].values))
-
     #linear_pred = model.predict(X_predict_combined)[0]
-    linear_pred = model.predict(X_test_predict_combined)[0]
+    
 
     st.subheader('Прогнозовані ціни:')
     st.metric(label="Linear Regression", value=f"{linear_pred:.2f} ")
