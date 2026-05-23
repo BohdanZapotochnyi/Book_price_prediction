@@ -11,17 +11,18 @@ import io
 import base64
 from IPython.display import display
 
-def load_and_preprocess_data(url: str):
-    try:
-        df = pd.read_csv(url, encoding='latin1', sep=';')
-        return df
-    except FileNotFoundError:
-        st.error(f"Помилка: файл '{url}' не знайдено. Переконайтеся, що він знаходиться в правильному шляху.")
-        st.stop()
+#def load_and_preprocess_data(url: str):
+#    try:
+#        df = pd.read_csv(url, encoding='latin1', sep=';')
+#        return df
+#    except FileNotFoundError:
+#        st.error(f"Помилка: файл '{url}' не знайдено. Переконайтеся, що він знаходиться в правильному шляху.")
+#        st.stop()
 
 # Виклик функції
 data_url = "https://github.com/m67074/Book_price_prediction/raw/refs/heads/main/train.csv"
-df = load_and_preprocess_data(data_url)
+#df = load_and_preprocess_data(data_url)
+df = pd.read_csv(data_url, encoding='latin1', sep=';')
 
 df['Price'] = pd.to_numeric(df['Price'], errors='coerce')
 df['Reviews'] = df['Reviews'].astype(str).str.extract(r'(\d+\.?\d*)').astype(float)
