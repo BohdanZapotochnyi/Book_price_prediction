@@ -54,6 +54,9 @@ poly_model.fit(X_train_combined, y_train)
 elastic_net_model = ElasticNet(random_state=42)
 elastic_net_model.fit(X_train_combined, y_train)
 
+ridge_net_model = Ridge(random_state=42)
+ridge_net_model.fit(X_train_combined, y_train)
+
 st.title('Book price prediction')
 
 st.subheader('Enter book information:')
