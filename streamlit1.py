@@ -7,7 +7,7 @@ def load_and_preprocess_data(https://github.com/m67074/Book_price_prediction/raw
     try:
         df = pd.read_csv(https://github.com/m67074/Book_price_prediction/raw/refs/heads/main/train.csv, encoding='latin1', sep=';', engine='python', on_bad_lines='warn')
     except FileNotFoundError:
-        st.error(f"Помилка: файл '{file_path}' не знайдено. Переконайтеся, що він знаходиться в правильному шляху.")
+        st.error(f"Помилка: файл '{https://github.com/m67074/Book_price_prediction/raw/refs/heads/main/train.csv}' не знайдено. Переконайтеся, що він знаходиться в правильному шляху.")
         st.stop()
 
 st.title('Book price prediction')
