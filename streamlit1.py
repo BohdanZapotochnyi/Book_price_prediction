@@ -2,14 +2,6 @@
 import streamlit as st
 import numpy as np
 import pandas as pd
-from sklearn.linear_model import LinearRegression, ElasticNet, Ridge
-from sklearn.model_selection import train_test_split
-from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
-from sklearn.preprocessing import PolynomialFeatures, LabelEncoder, StandardScaler
-import re
-import io
-import base64
-from IPython.display import display
 
 #def load_and_preprocess_data(url: str):
 #    try:
