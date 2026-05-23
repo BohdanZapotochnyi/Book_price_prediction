@@ -111,7 +111,6 @@ if st.button('Прогнозувати ціну'):
     #    X_predict_input.loc[:, col] = X_predict_input.loc[:, col].fillna(col_mean_input if not pd.isna(col_mean_input) else 0)
     #X_predict_scaled_numerical = feature_scaler.transform(X_predict_input[numerical_features])
     #X_predict_combined = np.hstack((X_predict_scaled_numerical, X_predict_input[categorical_features].values))
-    #linear_pred = model.predict(X_predict_combined)[0]
     
 
     st.subheader('Прогнозовані ціни:')
