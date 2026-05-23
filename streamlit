@@ -87,16 +87,7 @@ t.metric(label="Linear Regression", value=f"{linear_pred:.2f} грн")
 
 
 
-import streamlit as st
-import numpy as np
-import pandas as pd
 
-st.title("Book Price Prediction")
-st.markdown(
-    """ 
-    Enter your book details:
-    """ 
-)
 Title =  st.text_input('Book title ') 
 
 Author =  st.text_input('Book author ') 
@@ -113,17 +104,3 @@ Genre =  st.text_input('Book genre ')
 
 BookCategory  =  st.text_input('Book category ') 
 
-data = {Title , Author , Edition , Reviews  , Ratings  , Synopsis ,Genre , BookCategory}
-
-df = pd.DataFrame(data)
-
-st.write("Таблиця даних:")
-st.dataframe(data)
-
-st.write("Таблиця даних:")
-
-st.table(df)  
-
-result = Author, Title,
-
-st.write("Результат :", result)
