@@ -112,8 +112,8 @@ if st.button('Прогнозувати ціну'):
     poly_pred = poly_model.predict(X_predict_combined)[0]
     elastic_test_pred = elastic_net_model.predict(X_predict_combined)[0]
     ridge_test_pred = ridge_net_model.predict(X_predict_combined)[0]
-    rf_test_pred = model.predict(X_predict)[0] 
-    gbr_test_pred = gbr_model.predict(X_predict)[0]
+    rf_test_pred = model.predict(X_predict_combined)[0] 
+    gbr_test_pred = gbr_model.predict(X_predict_combined)[0]
 
    
     
