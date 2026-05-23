@@ -34,7 +34,7 @@ if st.button('Прогнозувати ціну'):
 st.subheader('Прогнозовані ціни:')
 t.metric(label="Linear Regression", value=f"{linear_pred:.2f} ")
 
-# Обробка даних
+# LinearRegression
 
 df['Price'] = pd.to_numeric(df['Price'], errors='coerce')
 df['Reviews'] = df['Reviews'].astype(str).str.extract(r'(\d+\.?\d*)').astype(float)
