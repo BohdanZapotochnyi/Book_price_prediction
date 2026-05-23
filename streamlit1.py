@@ -106,35 +106,6 @@ if st.button('Прогнозувати ціну'):
     st.subheader('Прогнозовані ціни:')
     st.metric(label="Linear Regression", value=f"{linear_pred:.2f} ")
 
-if 'Price' in df_test.columns:
-    df_test['Price'] = pd.to_numeric(df_test['Price'], errors='coerce')
-
-# Очищення стовпців 'Reviews' та 'Ratings' для вилучення числових значень
-df_test['Reviews'] = df_test['Reviews'].astype(str).str.extract(r'(\d+\.?\d*)').astype(float)
-df_test['Ratings'] = df_test['Ratings'].astype(str).str.extract(r'(\d+)').astype(float)
-
-# Застосування цільового кодування, використовуючи середні значення з тренувального набору
-# Це запобігає витоку даних з тестового набору
-# Обробка нових авторів/жанрів у тестовому наборі: заповнюємо їх глобальним середнім значенням з тренувального набору
-
-df_test['Author_Encoded'] = df_test['Author'].map(mean_prices_by_author.fillna(global_mean_price))
-df_test['Genre_Encoded'] = df_test['Genre'].map(mean_prices_by_genre.fillna(global_mean_price))
-
-# Заповнення будь-яких NaN, які могли виникнути через нові категорії в тестовому наборі, глобальним середнім значенням
-df_test['Author_Encoded'] = df_test['Author_Encoded'].fillna(global_mean_price)
-df_test['Genre_Encoded'] = df_test['Genre_Encoded'].fillna(global_mean_price)
 
 
-# Визначення ознак (X_test_predict) для прогнозування
-X_test_predict = df_test[['Reviews', 'Ratings', 'Author_Encoded', 'Genre_Encoded']]
-
-# Заповнення можливих NaN у числових ознаках, які могли виникнути під час екстракції
-X_test_predict['Reviews'] = X_test_predict['Reviews'].fillna(X_train['Reviews'].mean())
-X_test_predict['Ratings'] = X_test_predict['Ratings'].fillna(X_train['Ratings'].mean())
-
-# Масштабування числових ознак за допомогою СКЕЙЛЕРА, навченого на тренувальних даних
-X_test_predict_scaled_numerical = scaler.transform(X_test_predict[numerical_features])
-
-# Об'єднання масштабованих числових ознак з категоріальними
-X_test_predict_combined = np.hstack((X_test_predict_scaled_numerical, X_test_predict[categorical_features].values))
 
