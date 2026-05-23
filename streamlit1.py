@@ -48,6 +48,9 @@ X_test_combined = np.hstack((X_test_scaled, X_test[categorical_features].values)
 model = LinearRegression()
 model.fit(X_train, y_train)
 
+poly_model = LinearRegression()
+poly_model.fit(X_train_combined, y_train)
+
 
 st.title('Book price prediction')
 
