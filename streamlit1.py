@@ -119,7 +119,7 @@ if st.button('Прогнозувати ціну'):
     st.subheader('Прогнозовані ціни:')
     st.metric(label="Linear Regression", value=f"{linear_pred:.2f} ")
     st.metric(label="Polynomial Regression", value=f"{poly_pred:.2f} ")
-
-
-
-
+    st.metric(label="Polynomial Regression", value=f"{elastic_test_pred :.2f} ")
+    st.metric(label="Polynomial Regression", value=f"{ridge_test_pred:.2f} ")
+    st.metric(label="Polynomial Regression", value=f"{rf_test_pred:.2f} ")
+    st.metric(label="Polynomial Regression", value=f"{gbr_test_pred:.2f} ")
