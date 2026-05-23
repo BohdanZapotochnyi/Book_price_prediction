@@ -8,8 +8,6 @@ from sklearn.preprocessing import PolynomialFeatures, LabelEncoder, StandardScal
 import re
 import io
 import base64
-from IPython.display import display
-
 #def load_and_preprocess_data(url: str):
 #    try:
 #        df = pd.read_csv(url, encoding='latin1', sep=';')
