@@ -83,8 +83,6 @@ if st.button('Прогнозувати ціну'):
         'Author': [author],
         'Genre': [genre]
     })
-
-    
     input_data['Reviews'] = input_data['Reviews'].astype(str).str.extract(r'(\d+\.?\d*)').astype(float)
     input_data['Ratings'] = input_data['Ratings'].astype(str).str.extract(r'(\d+)').astype(float)
     input_data['Author_Encoded'] = input_data['Author'].map(mean_prices_by_author.fillna(global_mean_price))
