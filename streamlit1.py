@@ -45,14 +45,10 @@ X_test_scaled = scaler.transform(X_test[numerical_features])
 X_train_combined = np.hstack((X_train_scaled, X_train[categorical_features].values))
 X_test_combined = np.hstack((X_test_scaled, X_test[categorical_features].values))
 
-
-# -----------------------
-
-# Ініціалізація моделі лінійної регресії
 model = LinearRegression()
-
-# Навчання моделі
 model.fit(X_train, y_train)
+
+
 st.title('Book price prediction')
 
 st.subheader('Enter book information:')
@@ -86,9 +82,9 @@ if st.button('Прогнозувати ціну'):
         col_mean_input = X_predict_input[col].mean() # Should be just the input value, but for consistency
         X_predict_input.loc[:, col] = X_predict_input.loc[:, col].fillna(col_mean_input if not pd.isna(col_mean_input) else 0)
 
-        X_predict_scaled_numerical = feature_scaler.transform(X_predict_input[numerical_features])
+    X_predict_scaled_numerical = feature_scaler.transform(X_predict_input[numerical_features])
 
-        X_predict_combined = np.hstack((X_predict_scaled_numerical, X_predict_input[categorical_features].values))
+    X_predict_combined = np.hstack((X_predict_scaled_numerical, X_predict_input[categorical_features].values))
 
     linear_pred = linear_model.predict(X_predict_combined)[0]
 
