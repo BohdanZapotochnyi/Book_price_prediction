@@ -8,6 +8,60 @@ def load_and_preprocess_data(file_path):
     except FileNotFoundError:
         st.error(f"Помилка: файл '{file_path}' не знайдено. Переконайтеся, що він знаходиться в правильному шляху.")
         st.stop()
+# --- Початок доданої попередньої обробки даних для самостійного виконання ---
+# Перетворення стовпця 'Price' на числовий формат, NaN для некоректних значень
+df['Price'] = pd.to_numeric(df['Price'], errors='coerce')
+
+# Очищення стовпців 'Reviews' та 'Ratings' для вилучення числових значень
+df['Reviews'] = df['Reviews'].astype(str).str.extract(r'(\d+\.?\d*)').astype(float)
+df['Ratings'] = df['Ratings'].astype(str).str.extract(r'(\d+)').astype(float)
+
+# Calculate mean prices by Author and Genre for target encoding
+# Note: Applying target encoding on the full dataframe before splitting can lead to data leakage.
+# For a more robust ML pipeline, target encoding should ideally be calculated on training data only.
+# However, to replicate the kernel state's 'Author_Encoded' and 'Genre_Encoded' as floats,
+# we apply it here for self-containment.
+
+# Розрахунок глобального середнього значення ціни для заповнення пропущених значень
+global_mean_price = df['Price'].mean()
+
+# Розрахунок середніх цін за автором та жанром для кодування
+mean_prices_by_author = df.groupby('Author')['Price'].transform('mean')
+mean_prices_by_genre = df.groupby('Genre')['Price'].transform('mean')
+
+# Створення нових стовпців для закодованих автора та жанру на основі середніх цін
+df['Author_Encoded'] = mean_prices_by_author
+df['Genre_Encoded'] = mean_prices_by_genre
+
+# Заповнення будь-яких пропущених значень у закодованих стовпцях глобальним середнім значенням ціни
+df['Author_Encoded'] = df['Author_Encoded'].fillna(global_mean_price)
+df['Genre_Encoded'] = df['Genre_Encoded'].fillna(global_mean_price)
+
+# Визначення ознак (X) та цільової змінної (y) за допомогою оброблених даних
+X = df[['Reviews', 'Ratings', 'Author_Encoded', 'Genre_Encoded']]
+y = df['Price']
+
+# Видалення рядків, де y (Price) є NaN, оскільки вони не можуть бути використані для навчання
+# Забезпечення однакових індексів X та y після видалення NaN
+y.dropna(inplace=True)
+X = X.loc[y.index]
+
+# Розділення даних на тренувальний та тестовий набори
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Визначення числових та категоріальних ознак для подальшої обробки
+numerical_features = ['Reviews', 'Ratings']
+categorical_features = ['Author_Encoded', 'Genre_Encoded']
+
+# Масштабування числових ознак
+scaler = StandardScaler()
+X_train_scaled = scaler.fit_transform(X_train[numerical_features])
+X_test_scaled = scaler.transform(X_test[numerical_features])
+
+# Об'єднання масштабованих числових ознак з категоріальними
+X_train_combined = np.hstack((X_train_scaled, X_train[categorical_features].values))
+X_test_combined = np.hstack((X_test_scaled, X_test[categorical_features].values))
+# --- Кінець доданої попередньої обробки даних для самостійного виконання ---
 
 
 st.title('Прогнозування цін на книги')
