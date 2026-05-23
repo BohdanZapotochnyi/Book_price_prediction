@@ -91,19 +91,3 @@ rf_pred = rf_model.predict(X_predict_combined)[0]
 ----
 
 
-Title =  st.text_input('Book title ') 
-
-Author =  st.text_input('Book author ') 
-
-Edition  =  st.text_input('Book edition ') 
-
-Reviews  =  st.text_input('Book reviews  ')  
-
-Ratings  =  st.text_input('Book ratings ')   
-
-Synopsis  =  st.text_input('Book synopsis ')   
-
-Genre =  st.text_input('Book genre ')    
-
-BookCategory  =  st.text_input('Book category ') 
-
