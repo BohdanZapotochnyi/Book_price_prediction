@@ -78,10 +78,10 @@ bookcategory  =  st.text_input('Book category ')
 
 if st.button('Прогнозувати ціну'):
     input_data = pd.DataFrame({
-        'Reviews': [reviews],
-        'Ratings': [ratings],
-        'Author': [author],
-        'Genre': [genre]
+        'Reviews1': [reviews],
+        'Ratings1': [ratings],
+        'Author1': [author],
+        'Genre1': [genre]
     })
     
     #input_data['Reviews'] = input_data['Reviews'].astype(str).str.extract(r'(\d+\.?\d*)').astype(float)
@@ -96,13 +96,13 @@ if st.button('Прогнозувати ціну'):
     #X_predict_scaled_numerical = scaler.transform(X_predict[numerical_features])
     #X_predict_combined = np.hstack((X_predict_scaled_numerical, X_predict[categorical_features].values))
 
-    input_data['Author_Encoded'] = input_data['Author'].map(mean_prices_by_author)
-    input_data['Genre_Encoded'] = input_data['Genre'].map(mean_prices_by_genre)
+    input_data['Author_Encoded'] = input_data['Author1'].map(mean_prices_by_author)
+    input_data['Genre_Encoded'] = input_data['Genre1'].map(mean_prices_by_genre)
     input_data['Author_Encoded'] = input_data['Author_Encoded'].fillna(global_mean_price)
     input_data['Genre_Encoded'] = input_data['Genre_Encoded'].fillna(global_mean_price)
-    X_predict_input = input_data[['Reviews', 'Ratings', 'Author_Encoded', 'Genre_Encoded']]
-    for col in ['Reviews', 'Ratings']:
-        col_mean_input = X_predict_input[col].mean() # Should be just the input value, but for consistency
+    X_predict_input = input_data[['Reviews1', 'Ratings1', 'Author_Encoded', 'Genre_Encoded']]
+    for col in ['Reviews1', 'Ratings1']:
+        col_mean_input = X_predict_input[col].mean() 
         X_predict_input.loc[:, col] = X_predict_input.loc[:, col].fillna(col_mean_input if not pd.isna(col_mean_input) else 0)
     X_predict_scaled_numerical = scaler.transform(X_predict_input[numerical_features])
     X_predict_combined = np.hstack((X_predict_scaled_numerical, X_predict_input[categorical_features].values))
