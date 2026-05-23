@@ -94,5 +94,5 @@ if st.button('Прогнозувати ціну'):
     rf_pred = rf_model.predict(X_predict_combined)[0]
 
 st.subheader('Прогнозовані ціни:')
-t.metric(label="Linear Regression", value=f"{linear_pred:.2f} ")
+st.metric(label="Linear Regression", value=f"{linear_pred:.2f} ")
 
