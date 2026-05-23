@@ -5,7 +5,7 @@ import numpy as np
 
 def load_and_preprocess_data(https://github.com/m67074/Book_price_prediction/raw/refs/heads/main/train.csv):
     try:
-        df = pd.read_csv(https://github.com/m67074/Book_price_prediction/raw/refs/heads/main/train.csv, encoding='latin1', sep=';', engine='python', on_bad_lines='warn')
+        df = pd.read_csv(https://github.com/m67074/Book_price_prediction/raw/refs/heads/main/train.csv, encoding='latin1', sep=';')#, engine='python', on_bad_lines='warn')
     except FileNotFoundError:
         st.error(f"Помилка: файл '{https://github.com/m67074/Book_price_prediction/raw/refs/heads/main/train.csv}' не знайдено. Переконайтеся, що він знаходиться в правильному шляху.")
         st.stop()
