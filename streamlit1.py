@@ -57,6 +57,9 @@ elastic_net_model.fit(X_train_combined, y_train)
 ridge_net_model = Ridge(random_state=42)
 ridge_net_model.fit(X_train_combined, y_train)
 
+model = RandomForestRegressor(n_estimators=100, random_state=42)
+model.fit(X_train, y_train)
+
 st.title('Book price prediction')
 
 st.subheader('Enter book information:')
