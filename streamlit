@@ -11,35 +11,6 @@ def load_and_preprocess_data(file_path):
         st.error(f"Помилка: файл '{file_path}' не знайдено. Переконайтеся, що він знаходиться в правильному шляху.")
         st.stop()
 
-# Обробка даних
-
-df['Price'] = pd.to_numeric(df['Price'], errors='coerce')
-df['Reviews'] = df['Reviews'].astype(str).str.extract(r'(\d+\.?\d*)').astype(float)
-df['Ratings'] = df['Ratings'].astype(str).str.extract(r'(\d+)').astype(float)
-global_mean_price = df['Price'].mean()
-mean_prices_by_author = df.groupby('Author')['Price'].transform('mean')
-mean_prices_by_genre = df.groupby('Genre')['Price'].transform('mean')
-df['Author_Encoded'] = mean_prices_by_author
-df['Genre_Encoded'] = mean_prices_by_genre
-df['Author_Encoded'] = df['Author_Encoded'].fillna(global_mean_price)
-df['Genre_Encoded'] = df['Genre_Encoded'].fillna(global_mean_price)
-X = df[['Reviews', 'Ratings', 'Author_Encoded', 'Genre_Encoded']]
-y = df['Price']
-y.dropna(inplace=True)
-X = X.loc[y.index]
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-numerical_features = ['Reviews', 'Ratings']
-categorical_features = ['Author_Encoded', 'Genre_Encoded']
-scaler = StandardScaler()
-X_train_scaled = scaler.fit_transform(X_train[numerical_features])
-X_test_scaled = scaler.transform(X_test[numerical_features])
-X_train_combined = np.hstack((X_train_scaled, X_train[categorical_features].values))
-X_test_combined = np.hstack((X_test_scaled, X_test[categorical_features].values))
-
-model = LinearRegression()
-model.fit(X_train, y_train)
-
-# Вивід у додатку
 
 st.title('Прогнозування цін на книги')
 
@@ -85,7 +56,35 @@ rf_pred = rf_model.predict(X_predict_combined)[0]
 st.subheader('Прогнозовані ціни:')
 t.metric(label="Linear Regression", value=f"{linear_pred:.2f} грн")
 
+# Обробка даних
 
+df['Price'] = pd.to_numeric(df['Price'], errors='coerce')
+df['Reviews'] = df['Reviews'].astype(str).str.extract(r'(\d+\.?\d*)').astype(float)
+df['Ratings'] = df['Ratings'].astype(str).str.extract(r'(\d+)').astype(float)
+global_mean_price = df['Price'].mean()
+mean_prices_by_author = df.groupby('Author')['Price'].transform('mean')
+mean_prices_by_genre = df.groupby('Genre')['Price'].transform('mean')
+df['Author_Encoded'] = mean_prices_by_author
+df['Genre_Encoded'] = mean_prices_by_genre
+df['Author_Encoded'] = df['Author_Encoded'].fillna(global_mean_price)
+df['Genre_Encoded'] = df['Genre_Encoded'].fillna(global_mean_price)
+X = df[['Reviews', 'Ratings', 'Author_Encoded', 'Genre_Encoded']]
+y = df['Price']
+y.dropna(inplace=True)
+X = X.loc[y.index]
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+numerical_features = ['Reviews', 'Ratings']
+categorical_features = ['Author_Encoded', 'Genre_Encoded']
+scaler = StandardScaler()
+X_train_scaled = scaler.fit_transform(X_train[numerical_features])
+X_test_scaled = scaler.transform(X_test[numerical_features])
+X_train_combined = np.hstack((X_train_scaled, X_train[categorical_features].values))
+X_test_combined = np.hstack((X_test_scaled, X_test[categorical_features].values))
+
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+----
 
 
 Title =  st.text_input('Book title ') 
