@@ -58,7 +58,7 @@ st.title('Book price prediction')
 st.subheader('Enter book information:')
 
 title = st.text_input('Book title')
-Author = st.text_input('Book author')
+author = st.text_input('Book author')
 edition  =  st.text_input('Book edition ') 
 genre = st.text_input('Book genre')
 reviews = st.number_input('Book reviews', min_value=0.0, value=4.4, step=0.1)
