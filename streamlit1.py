@@ -1,6 +1,4 @@
 
-pandas==2.2.2
-scikit-learn==1.5.0
 import streamlit as st
 import numpy as np
 import pandas as pd
