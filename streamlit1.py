@@ -3,7 +3,7 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 
-def load_and_preprocess_data(train.csv):
+def load_and_preprocess_data(https://github.com/m67074/Book_price_prediction/raw/refs/heads/main/train.csv):
     try:
         df = pd.read_csv(train.csv, encoding='latin1', sep=';', engine='python', on_bad_lines='warn')
     except FileNotFoundError:
