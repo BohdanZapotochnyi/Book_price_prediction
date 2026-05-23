@@ -11,6 +11,7 @@ def load_and_preprocess_data(file_path):
         st.error(f"Помилка: файл '{file_path}' не знайдено. Переконайтеся, що він знаходиться в правильному шляху.")
         st.stop()
 
+# Вивід у додатку
 
 st.title('Прогнозування цін на книги')
 
@@ -29,29 +30,6 @@ if st.button('Прогнозувати ціну'):
         'Author': [author],
         'Genre': [genre]
     })
-
-# Обробка даних
-
-input_data['Author_Encoded'] = input_data['Author'].map(mean_prices_by_author)
-input_data['Genre_Encoded'] = input_data['Genre'].map(mean_prices_by_genre)
-
-input_data['Author_Encoded'] = input_data['Author_Encoded'].fillna(global_mean_price)
-input_data['Genre_Encoded'] = input_data['Genre_Encoded'].fillna(global_mean_price)
-
-X_predict_input = input_data[['Reviews', 'Ratings', 'Author_Encoded', 'Genre_Encoded']]
-
-for col in ['Reviews', 'Ratings']:
-    col_mean_input = X_predict_input[col].mean() # Should be just the input value, but for consistency
-    X_predict_input.loc[:, col] = X_predict_input.loc[:, col].fillna(col_mean_input if not pd.isna(col_mean_input) else 0)
-
-X_predict_scaled_numerical = feature_scaler.transform(X_predict_input[numerical_features])
-
-X_predict_combined = np.hstack((X_predict_scaled_numerical, X_predict_input[categorical_features].values))
-
-linear_pred = linear_model.predict(X_predict_combined)[0]
-rf_pred = rf_model.predict(X_predict_combined)[0]
-
-# Вивід у додатку
 
 st.subheader('Прогнозовані ціни:')
 t.metric(label="Linear Regression", value=f"{linear_pred:.2f} грн")
@@ -83,6 +61,26 @@ X_test_combined = np.hstack((X_test_scaled, X_test[categorical_features].values)
 
 model = LinearRegression()
 model.fit(X_train, y_train)
+
+
+input_data['Author_Encoded'] = input_data['Author'].map(mean_prices_by_author)
+input_data['Genre_Encoded'] = input_data['Genre'].map(mean_prices_by_genre)
+
+input_data['Author_Encoded'] = input_data['Author_Encoded'].fillna(global_mean_price)
+input_data['Genre_Encoded'] = input_data['Genre_Encoded'].fillna(global_mean_price)
+
+X_predict_input = input_data[['Reviews', 'Ratings', 'Author_Encoded', 'Genre_Encoded']]
+
+for col in ['Reviews', 'Ratings']:
+    col_mean_input = X_predict_input[col].mean() # Should be just the input value, but for consistency
+    X_predict_input.loc[:, col] = X_predict_input.loc[:, col].fillna(col_mean_input if not pd.isna(col_mean_input) else 0)
+
+X_predict_scaled_numerical = feature_scaler.transform(X_predict_input[numerical_features])
+
+X_predict_combined = np.hstack((X_predict_scaled_numerical, X_predict_input[categorical_features].values))
+
+linear_pred = linear_model.predict(X_predict_combined)[0]
+rf_pred = rf_model.predict(X_predict_combined)[0]
 
 ----
 
