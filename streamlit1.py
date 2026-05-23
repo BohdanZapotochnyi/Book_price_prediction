@@ -6,7 +6,6 @@ from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
 from sklearn.preprocessing import PolynomialFeatures, LabelEncoder, StandardScaler
 import re
-import matplotlib.pyplot as plt
 import io
 import base64
 from IPython.display import display
