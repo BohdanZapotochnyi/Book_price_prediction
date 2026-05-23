@@ -74,24 +74,24 @@ if st.button('Прогнозувати ціну'):
         'Genre': [genre]
     })
 
-input_data['Author_Encoded'] = input_data['Author'].map(mean_prices_by_author)
-input_data['Genre_Encoded'] = input_data['Genre'].map(mean_prices_by_genre)
+    input_data['Author_Encoded'] = input_data['Author'].map(mean_prices_by_author)
+    input_data['Genre_Encoded'] = input_data['Genre'].map(mean_prices_by_genre)
 
-input_data['Author_Encoded'] = input_data['Author_Encoded'].fillna(global_mean_price)
-input_data['Genre_Encoded'] = input_data['Genre_Encoded'].fillna(global_mean_price)
+    input_data['Author_Encoded'] = input_data['Author_Encoded'].fillna(global_mean_price)
+    input_data['Genre_Encoded'] = input_data['Genre_Encoded'].fillna(global_mean_price)
 
-X_predict_input = input_data[['Reviews', 'Ratings', 'Author_Encoded', 'Genre_Encoded']]
+    X_predict_input = input_data[['Reviews', 'Ratings', 'Author_Encoded', 'Genre_Encoded']]
 
-for col in ['Reviews', 'Ratings']:
-    col_mean_input = X_predict_input[col].mean() # Should be just the input value, but for consistency
-    X_predict_input.loc[:, col] = X_predict_input.loc[:, col].fillna(col_mean_input if not pd.isna(col_mean_input) else 0)
+    for col in ['Reviews', 'Ratings']:
+        col_mean_input = X_predict_input[col].mean() # Should be just the input value, but for consistency
+        X_predict_input.loc[:, col] = X_predict_input.loc[:, col].fillna(col_mean_input if not pd.isna(col_mean_input) else 0)
 
-X_predict_scaled_numerical = feature_scaler.transform(X_predict_input[numerical_features])
+    X_predict_scaled_numerical = feature_scaler.transform(X_predict_input[numerical_features])
 
-X_predict_combined = np.hstack((X_predict_scaled_numerical, X_predict_input[categorical_features].values))
+    X_predict_combined = np.hstack((X_predict_scaled_numerical, X_predict_input[categorical_features].values))
 
-linear_pred = linear_model.predict(X_predict_combined)[0]
-rf_pred = rf_model.predict(X_predict_combined)[0]
+    linear_pred = linear_model.predict(X_predict_combined)[0]
+    rf_pred = rf_model.predict(X_predict_combined)[0]
 
 st.subheader('Прогнозовані ціни:')
 t.metric(label="Linear Regression", value=f"{linear_pred:.2f} ")
