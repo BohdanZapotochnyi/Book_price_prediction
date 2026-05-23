@@ -32,7 +32,7 @@ if st.button('Прогнозувати ціну'):
     })
 
 st.subheader('Прогнозовані ціни:')
-t.metric(label="Linear Regression", value=f"{linear_pred:.2f} грн")
+t.metric(label="Linear Regression", value=f"{linear_pred:.2f} ")
 
 # Обробка даних
 
