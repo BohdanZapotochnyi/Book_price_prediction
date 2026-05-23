@@ -2,12 +2,17 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 
-def load_and_preprocess_data(https://github.com/m67074/Book_price_prediction/raw/refs/heads/main/train.csv):
+def load_and_preprocess_data(url: str):
     try:
-        df = pd.read_csv(https://github.com/m67074/Book_price_prediction/raw/refs/heads/main/train.csv, encoding='latin1', sep=';')#, engine='python', on_bad_lines='warn')
+        df = pd.read_csv(url, encoding='latin1', sep=';')
+        return df
     except FileNotFoundError:
-        st.error(f"Помилка: файл '{https://github.com/m67074/Book_price_prediction/raw/refs/heads/main/train.csv}' не знайдено. Переконайтеся, що він знаходиться в правильному шляху.")
+        st.error(f"Помилка: файл '{url}' не знайдено. Переконайтеся, що він знаходиться в правильному шляху.")
         st.stop()
+
+# Виклик функції
+data_url = "https://github.com/m67074/Book_price_prediction/raw/refs/heads/main/train.csv"
+df = load_and_preprocess_data(data_url)
 
 st.title('Book price prediction')
 
