@@ -4,124 +4,118 @@ import pandas as pd
 from sklearn.linear_model import LinearRegression, ElasticNet, Ridge
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
-from sklearn.preprocessing import PolynomialFeatures, LabelEncoder, StandardScaler
-import re
-import io
-import base64
+from sklearn.preprocessing import PolynomialFeatures, StandardScaler
 
-#def load_and_preprocess_data(url: str):
-#    try:
-#        df = pd.read_csv(url, encoding='latin1', sep=';')
-#        return df
-#    except FileNotFoundError:
-#        st.error(f"Помилка: файл '{url}' не знайдено. Переконайтеся, що він знаходиться в правильному шляху.")
-#        st.stop()
+# 1. Завантаження даних (Використовуємо локальний файл або RAW посилання)
+data_file = 'Predict_Book_Prices_Actual_USD.csv' # Сконвертований файл у USD із роздільником ';'
 
-# Виклик функції
-data_url = "https://github.com/BohdanZapotochnyi/Book_price_prediction/blob/main/train.csv"
-#df = load_and_preprocess_data(data_url)
-df = pd.read_csv(data_url, encoding='latin1', sep=';')
+try:
+    df = pd.read_csv(data_file, sep=';', encoding='utf-8')
+except FileNotFoundError:
+    # Запасний варіант, якщо файлу немає локально (прибираємо blob на raw)
+    raw_url = "https://raw.githubusercontent.com/BohdanZapotochnyi/Book_price_prediction/main/train.csv"
+    df = pd.read_csv(raw_url, encoding='latin1', sep=';')
 
+# 2. Очищення та обробка базових ознак
 df['Price'] = pd.to_numeric(df['Price'], errors='coerce')
 df['Reviews'] = df['Reviews'].astype(str).str.extract(r'(\d+\.?\d*)').astype(float)
 df['Ratings'] = df['Ratings'].astype(str).str.extract(r'(\d+)').astype(float)
+
+# Створюємо словники реальних середніх цін (Target Encoding) для авторів та жанрів
 global_mean_price = df['Price'].mean()
-mean_prices_by_author = df.groupby('Author')['Price'].transform('mean')
-mean_prices_by_genre = df.groupby('Genre')['Price'].transform('mean')
-df['Author_Encoded'] = mean_prices_by_author
-df['Genre_Encoded'] = mean_prices_by_genre
-df['Author_Encoded'] = df['Author_Encoded'].fillna(global_mean_price)
-df['Genre_Encoded'] = df['Genre_Encoded'].fillna(global_mean_price)
+author_map = df.groupby('Author')['Price'].mean().to_dict()
+genre_map = df.groupby('Genre')['Price'].mean().to_dict()
+
+# Кодуємо колонки в датафреймі
+df['Author_Encoded'] = df['Author'].map(author_map).fillna(global_mean_price)
+df['Genre_Encoded'] = df['Genre'].map(genre_map).fillna(global_mean_price)
+
+# Видаляємо пропуски в цільовій змінній
+df.dropna(subset=['Price'], inplace=True)
+
+# 3. Розділення на ознаки та таргет
 X = df[['Reviews', 'Ratings', 'Author_Encoded', 'Genre_Encoded']]
 y = df['Price']
-y.dropna(inplace=True)
-X = X.loc[y.index]
+
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# 4. Масштабування ознак
 numerical_features = ['Reviews', 'Ratings']
 categorical_features = ['Author_Encoded', 'Genre_Encoded']
-scaler = StandardScaler()
-X_train_scaled = scaler.fit_transform(X_train[numerical_features])
-X_test_scaled = scaler.transform(X_test[numerical_features])
-X_train_combined = np.hstack((X_train_scaled, X_train[categorical_features].values))
-X_test_combined = np.hstack((X_test_scaled, X_test[categorical_features].values))
 
-model = LinearRegression()
-model.fit(X_train, y_train)
+scaler = StandardScaler()
+# Навчаємо scaler на числових ознаках тренувальної вибірки
+X_train_num_scaled = scaler.fit_transform(X_train[numerical_features])
+X_test_num_scaled = scaler.transform(X_test[numerical_features])
+
+# Об'єднуємо масштабовані числові та категоріальні ознаки
+X_train_combined = np.hstack((X_train_num_scaled, X_train[categorical_features].values))
+X_test_combined = np.hstack((X_test_num_scaled, X_test[categorical_features].values))
+
+# Створюємо поліноміальні ознаки (степінь 2)
+poly_trans = PolynomialFeatures(degree=2, include_bias=False)
+X_train_poly = poly_trans.fit_transform(X_train_combined)
+X_test_poly = poly_trans.transform(X_test_combined)
+
+# 5. Навчання моделей (ВСІ моделі вчимо на однакових комбінованих даних!)
+lr_model = LinearRegression()
+lr_model.fit(X_train_combined, y_train)
 
 poly_model = LinearRegression()
-poly_model.fit(X_train_combined, y_train)
+poly_model.fit(X_train_poly, y_train)
 
-elastic_net_model = ElasticNet(random_state=42)
+elastic_net_model = ElasticNet(alpha=1.0, random_state=42)
 elastic_net_model.fit(X_train_combined, y_train)
 
-ridge_net_model = Ridge(random_state=42)
-ridge_net_model.fit(X_train_combined, y_train)
+ridge_model = Ridge(alpha=10.0, random_state=42) # Збільшено alpha для уникнення аномалій
+ridge_model.fit(X_train_combined, y_train)
 
-model = RandomForestRegressor(n_estimators=100, random_state=42)
-model.fit(X_train, y_train)
+rf_model = RandomForestRegressor(n_estimators=100, random_state=42)
+rf_model.fit(X_train_combined, y_train)
 
 gbr_model = GradientBoostingRegressor(n_estimators=100, learning_rate=0.1, max_depth=3, random_state=42)
-gbr_model.fit(X_train, y_train)
+gbr_model.fit(X_train_combined, y_train)
 
-st.title('Book price prediction')
-
+# 6. Інтерфейс Streamlit
+st.title('Book Price Prediction (in USD)')
 st.subheader('Enter book information:')
 
-title = st.text_input('Book title')
-author = st.text_input('Book author')
-edition  =  st.text_input('Book edition ') 
-genre = st.text_input('Book genre')
-reviews = st.number_input('Book reviews', min_value=0.0, value=4.4, step=0.1)
-ratings = st.number_input('Book ratings',step=1)
-synopsis  =  st.text_input('Book synopsis ')   
-bookcategory  =  st.text_input('Book category ') 
+author = st.text_input('Book author', value="Unknown")
+genre = st.text_input('Book genre', value="Fiction")
+reviews = st.number_input('Book reviews (Stars out of 5)', min_value=0.0, max_value=5.0, value=4.4, step=0.1)
+ratings = st.number_input('Book ratings (Count)', min_value=0, value=100, step=1)
 
 if st.button('Прогнозувати ціну'):
-    input_data = pd.DataFrame({
-        'Reviews': [reviews],
-        'Ratings': [ratings],
-        'Author': [author],
-        'Genre': [genre]
-    })
+    # Організація вхідних даних користувача
+    user_author_encoded = author_map.get(author, global_mean_price)
+    user_genre_encoded = genre_map.get(genre, global_mean_price)
     
-    #input_data['Reviews'] = input_data['Reviews'].astype(str).str.extract(r'(\d+\.?\d*)').astype(float)
-    #input_data['Ratings'] = input_data['Ratings'].astype(str).str.extract(r'(\d+)').astype(float)
-    #input_data['Author_Encoded'] = input_data['Author'].map(mean_prices_by_author.fillna(global_mean_price))
-    #input_data['Genre_Encoded'] = input_data['Genre'].map(mean_prices_by_genre.fillna(global_mean_price))
-    #input_data['Author_Encoded'] = input_data['Author_Encoded'].fillna(global_mean_price)
-    #input_data['Genre_Encoded'] = input_data['Genre_Encoded'].fillna(global_mean_price)
-    #X_predict = input_data[['Reviews', 'Ratings', 'Author_Encoded', 'Genre_Encoded']]
-    #X_predict['Reviews'] = X_predict['Reviews'].fillna(X_train['Reviews'].mean())
-    #X_predict['Ratings'] = X_predict['Ratings'].fillna(X_train['Ratings'].mean())
-    #X_predict_scaled_numerical = scaler.transform(X_predict[numerical_features])
-    #X_predict_combined = np.hstack((X_predict_scaled_numerical, X_predict[categorical_features].values))
-
-    input_data['Author_Encoded'] = input_data['Author'].map(mean_prices_by_author)
-    input_data['Genre_Encoded'] = input_data['Genre'].map(mean_prices_by_genre)
-    input_data['Author_Encoded'] = input_data['Author_Encoded'].fillna(global_mean_price)
-    input_data['Genre_Encoded'] = input_data['Genre_Encoded'].fillna(global_mean_price)
-    X_predict_input = input_data[['Reviews', 'Ratings', 'Author_Encoded', 'Genre_Encoded']]
-    for col in ['Reviews', 'Ratings']:
-        col_mean_input = X_predict_input[col].mean() 
-        X_predict_input.loc[:, col] = X_predict_input.loc[:, col].fillna(col_mean_input if not pd.isna(col_mean_input) else 0)
-    X_predict_scaled_numerical = scaler.transform(X_predict_input[numerical_features])
-    X_predict_combined = np.hstack((X_predict_scaled_numerical, X_predict_input[categorical_features].values))
-  
-
-    linear_pred = model.predict(X_predict_combined)[0]
-    poly_pred = poly_model.predict(X_predict_combined)[0]
-    elastic_test_pred = elastic_net_model.predict(X_predict_combined)[0]
-    ridge_test_pred = ridge_net_model.predict(X_predict_combined)[0]
-    rf_test_pred = model.predict(X_predict_combined)[0] 
-    gbr_test_pred = gbr_model.predict(X_predict_combined)[0]
-
-   
+    # Створюємо масив числових ознак та масштабуємо його
+    user_num = np.array([[reviews, ratings]])
+    user_num_scaled = scaler.transform(user_num)
     
-
-    st.subheader('Прогнозовані ціни:')
-    st.metric(label="Linear Regression", value=f"{linear_pred:.2f} ")
-    st.metric(label="Polynomial Regression", value=f"{poly_pred:.2f} ")
-    st.metric(label="Elastic Net Regression", value=f"{elastic_test_pred :.2f} ")
-    st.metric(label="Ridge Regression", value=f"{ridge_test_pred:.2f} ")
-    st.metric(label="Random Forest Regression", value=f"{rf_test_pred:.2f} ")
-    st.metric(label="Gradient Boosting Regression", value=f"{gbr_test_pred:.2f} ")
+    # Створюємо фінальний вектор ознак для прогнозів
+    X_predict_combined = np.hstack((user_num_scaled, [[user_author_encoded, user_genre_encoded]]))
+    X_predict_poly = poly_trans.transform(X_predict_combined)
+    
+    # Робимо прогнози
+    linear_pred = lr_model.predict(X_predict_combined)[0]
+    poly_pred = poly_model.predict(X_predict_poly)[0]
+    elastic_pred = elastic_net_model.predict(X_predict_combined)[0]
+    ridge_pred = ridge_model.predict(X_predict_combined)[0]
+    rf_pred = rf_model.predict(X_predict_combined)[0]
+    gbr_pred = gbr_model.predict(X_predict_combined)[0]
+    
+    # Виведення результатів
+    st.subheader('Прогнозовані ціни ($):')
+    
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        st.metric(label="Linear Regression", value=f"${max(0.0, linear_pred):.2f}")
+        st.metric(label="Polynomial Regression", value=f"${max(0.0, poly_pred):.2f}")
+    with col2:
+        st.metric(label="Elastic Net", value=f"${max(0.0, elastic_pred):.2f}")
+        st.metric(label="Ridge Regression", value=f"${max(0.0, ridge_pred):.2f}")
+    with col3:
+        st.metric(label="Random Forest", value=f"${max(0.0, rf_pred):.2f}")
+        st.metric(label="Gradient Boosting", value=f"${max(0.0, gbr_pred):.2f}")
