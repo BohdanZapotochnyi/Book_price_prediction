@@ -18,7 +18,8 @@ import base64
 #        st.stop()
 
 # Виклик функції
-data_url = "https://github.com/BohdanZapotochnyi/Book_price_prediction/raw/refs/heads/main/train.csv"
+#data_url = "https://github.com/BohdanZapotochnyi/Book_price_prediction/raw/refs/heads/main/train.csv"
+data_url = "https://github.com/m67074/Book_price_prediction/raw/refs/heads/main/train.csv"
 #df = load_and_preprocess_data(data_url)
 df = pd.read_csv(data_url, encoding='latin1', sep=';')
 
